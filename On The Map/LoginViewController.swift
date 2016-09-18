@@ -1,14 +1,14 @@
 //
-//  ViewController.swift
+//  LoginViewController.swift
 //  On The Map
 //
-//  Created by Work on 9/17/16.
+//  Created by Paul Crompton on 9/17/16.
 //  Copyright © 2016 Paul Crompton. All rights reserved.
 //
 
 import UIKit
 
-class ViewController: UIViewController {
+class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
