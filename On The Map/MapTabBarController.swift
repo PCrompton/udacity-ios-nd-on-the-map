@@ -1,29 +1,34 @@
 //
-//  InformationPostingViewController.swift
+//  MapTabBarController.swift
 //  On The Map
 //
-//  Created by Paul Crompton on 9/17/16.
+//  Created by Paul Crompton on 9/19/16.
 //  Copyright © 2016 Paul Crompton. All rights reserved.
 //
 
 import UIKit
-import MapKit
 
-class InformationPostingViewController: UIViewController {
+class MapTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    @IBAction func cancelButton(_ sender: AnyObject) {
-        dismiss(animated: true, completion: nil)
+    
+    @IBAction func logoutButton(_ sender: AnyObject) {
     }
 
+    @IBAction func pinButton(_ sender: AnyObject) {
+    }
+    
+    @IBAction func refreshButton(_ sender: AnyObject) {
+    }
     /*
     // MARK: - Navigation
 

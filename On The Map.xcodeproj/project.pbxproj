@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		964531591D906BD300043C27 /* MapTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964531581D906BD300043C27 /* MapTabBarController.swift */; };
 		968A619B1D8E081C00CD1545 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968A619A1D8E081C00CD1545 /* AppDelegate.swift */; };
 		968A619D1D8E081C00CD1545 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968A619C1D8E081C00CD1545 /* LoginViewController.swift */; };
 		968A61A01D8E081C00CD1545 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 968A619E1D8E081C00CD1545 /* Main.storyboard */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		964531581D906BD300043C27 /* MapTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTabBarController.swift; sourceTree = "<group>"; };
 		968A61971D8E081C00CD1545 /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		968A619A1D8E081C00CD1545 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		968A619C1D8E081C00CD1545 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				968A61CC1D8E0F8000CD1545 /* InformationPostingViewController.swift */,
 				968A61D21D8E187B00CD1545 /* LocationsTableViewController.swift */,
 				968A61CE1D8E164B00CD1545 /* LocationsMapViewController.swift */,
+				964531581D906BD300043C27 /* MapTabBarController.swift */,
 				968A619E1D8E081C00CD1545 /* Main.storyboard */,
 				968A61A11D8E081C00CD1545 /* Assets.xcassets */,
 				968A61A31D8E081C00CD1545 /* LaunchScreen.storyboard */,
@@ -271,6 +274,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				964531591D906BD300043C27 /* MapTabBarController.swift in Sources */,
 				968A61D31D8E187B00CD1545 /* LocationsTableViewController.swift in Sources */,
 				968A61CF1D8E164B00CD1545 /* LocationsMapViewController.swift in Sources */,
 				968A619D1D8E081C00CD1545 /* LoginViewController.swift in Sources */,
@@ -526,6 +530,7 @@
 				968A61C11D8E081C00CD1545 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		968A61C21D8E081C00CD1545 /* Build configuration list for PBXNativeTarget "On The MapTests" */ = {
 			isa = XCConfigurationList;
@@ -534,6 +539,7 @@
 				968A61C41D8E081C00CD1545 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		968A61C51D8E081C00CD1545 /* Build configuration list for PBXNativeTarget "On The MapUITests" */ = {
 			isa = XCConfigurationList;
@@ -542,6 +548,7 @@
 				968A61C71D8E081C00CD1545 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
