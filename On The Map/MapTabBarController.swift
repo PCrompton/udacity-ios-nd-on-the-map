@@ -12,13 +12,20 @@ class MapTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        StudentInformation.fetchStudents() {
+            self.updateChildren()
+        }
+     }
+    
+    func updateChildren() {
+        for child in childViewControllers {
+            if let child = child as? LocationsMapViewController {
+                child.loadStudents()
+            } else if let child = child as? LocationsTableViewController {
+                child.tableView.reloadData()
+            }
+        }
     }
     
     @IBAction func logoutButton(_ sender: AnyObject) {

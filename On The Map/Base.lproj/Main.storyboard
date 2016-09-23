@@ -76,8 +76,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="PQd-X7-nfJ">
-                                <frame key="frameInset" minY="64" width="1024" height="655"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="PQd-X7-nfJ">
+                                <connections>
+                                    <outlet property="delegate" destination="3kp-J7-61O" id="Exw-gK-l7i"/>
+                                </connections>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -89,6 +91,9 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="map" selectedImage="map" id="uhg-k6-Lda"/>
+                    <connections>
+                        <outlet property="mapView" destination="PQd-X7-nfJ" id="IdP-S9-FQ2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vOO-iR-V3d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -225,19 +230,38 @@
         <!--List-->
         <scene sceneID="bkd-Bi-xCo">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="BfL-aa-Ocb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController storyboardIdentifier="LocationsTableViewController" id="uDv-ce-SqH" customClass="LocationsTableViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="gSR-Pl-fq8">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="P4O-Ew-aTY">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="StudentInformationCell" textLabel="TDc-ec-eUX" detailTextLabel="9TU-dp-RAf" imageView="ZAE-7e-fqy" style="IBUITableViewCellStyleSubtitle" id="P4O-Ew-aTY">
                                 <rect key="frame" x="0.0" y="92" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="P4O-Ew-aTY" id="1QS-rb-3CO">
-                                    <frame key="frameInset" width="414" height="44"/>
+                                    <frame key="frameInset" width="414" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TDc-ec-eUX">
+                                            <frame key="frameInset" minX="44" minY="4" width="34" height="21"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9TU-dp-RAf">
+                                            <frame key="frameInset" minX="44" minY="25" width="33" height="15"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="pin" id="ZAE-7e-fqy">
+                                            <frame key="frameInset" minX="15" minY="14" width="14" height="14"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </imageView>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -248,6 +272,7 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="List" image="list" selectedImage="list" id="3I4-Sx-LcH"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BfL-aa-Ocb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="809" y="185"/>
         </scene>
