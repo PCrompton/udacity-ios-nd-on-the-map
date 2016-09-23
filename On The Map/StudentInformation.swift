@@ -49,7 +49,7 @@ struct StudentInformation {
     public static func fetchStudents(completion: (() -> Void)?) {
         let client = ParseClient.sharedInstance()
         
-        let task = client.taskForGETMethod(ParseClient.Methods.StudentLocation, parameters: [ParseClient.ParameterKeys.Limit: 10], completionHandlerForGET: { (results, error) in
+        let task = client.taskForGETMethod(ParseClient.Methods.StudentLocation, parameters: [ParseClient.ParameterKeys.Limit: ParseClient.ParameterValues.Limit], completionHandlerForGET: { (results, error) in
             
             guard let results = results?["results"] as? [[String: Any]] else {
                 fatalError("No key \"results\" found")

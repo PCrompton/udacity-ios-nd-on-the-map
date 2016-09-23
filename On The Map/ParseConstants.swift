@@ -35,5 +35,10 @@ extension ParseClient {
         static let Order = "order"
     }
     
+    // MARK: Paremeter Values
+    struct ParameterValues {
+        static let Limit = 100
+    }
+    
 
 }
