@@ -23,7 +23,7 @@ class MapTabBarController: UITabBarController {
             if let child = child as? LocationsMapViewController {
                 child.loadStudents()
             } else if let child = child as? LocationsTableViewController {
-                child.tableView.reloadData()
+                child.loadStudents()
             }
         }
     }
@@ -35,15 +35,6 @@ class MapTabBarController: UITabBarController {
     }
     
     @IBAction func refreshButton(_ sender: AnyObject) {
+        updateChildren()
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
