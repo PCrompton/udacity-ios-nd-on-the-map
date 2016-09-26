@@ -14,5 +14,12 @@ extension UdacityClient {
         let userId: String
         let firstName: String
         let lastName: String
+        
+        init(userId: String) {
+            self.userId = userId
+            
+            self.firstName = ""
+            self.lastName = ""
+        }
     }
 }

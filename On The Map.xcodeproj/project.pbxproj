@@ -170,11 +170,11 @@
 		96AB3D001D949DA70097DF7A /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				968A619C1D8E081C00CD1545 /* LoginViewController.swift */,
-				968A61CC1D8E0F8000CD1545 /* InformationPostingViewController.swift */,
-				968A61D21D8E187B00CD1545 /* LocationsTableViewController.swift */,
-				968A61CE1D8E164B00CD1545 /* LocationsMapViewController.swift */,
 				964531581D906BD300043C27 /* MapTabBarController.swift */,
+				968A619C1D8E081C00CD1545 /* LoginViewController.swift */,
+				968A61CE1D8E164B00CD1545 /* LocationsMapViewController.swift */,
+				968A61D21D8E187B00CD1545 /* LocationsTableViewController.swift */,
+				968A61CC1D8E0F8000CD1545 /* InformationPostingViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";

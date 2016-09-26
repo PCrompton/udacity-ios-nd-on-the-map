@@ -52,17 +52,6 @@ class ParseClient: SuperClient {
         return components.url!
     }
     
-    fileprivate func convertDataWithCompletionHandler(data: Data, completionHandlerForConvertData: (_ result: [String: Any]?, _ error: NSError?) -> Void) {
-        let parsedResult: [String: Any]?
-        do {
-            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
-            completionHandlerForConvertData(parsedResult, nil)
-        } catch {
-            let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-            completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
-        }
-    }
-    
     // MARK: Shared Instance
     class func sharedInstance() -> ParseClient {
         struct Singleton {

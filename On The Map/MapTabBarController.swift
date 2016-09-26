@@ -16,10 +16,8 @@ class MapTabBarController: UITabBarController {
         super.viewDidLoad()
         
         if loginSession == nil {
-            let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-            present(loginVC, animated: true, completion: nil)
+            presentLoginVC()
         }
-        
         ParseClient.StudentInformation.fetchStudents() {
             self.updateChildren()
         }
@@ -35,7 +33,14 @@ class MapTabBarController: UITabBarController {
         }
     }
     
+    func presentLoginVC() {
+        let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+        present(loginVC, animated: true, completion: nil)
+    }
+    
     @IBAction func logoutButton(_ sender: AnyObject) {
+        loginSession = nil
+        presentLoginVC()
     }
 
     @IBAction func pinButton(_ sender: AnyObject) {
