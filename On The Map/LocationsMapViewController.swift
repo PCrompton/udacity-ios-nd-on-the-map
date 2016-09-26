@@ -19,7 +19,7 @@ class LocationsMapViewController: UIViewController, MKMapViewDelegate {
     
     func loadStudents() {
         var annotations = [StudentAnnotation]()
-        let students = StudentInformation.students
+        let students = ParseClient.StudentInformation.students
         
         for student in students {
             let annotation = StudentAnnotation(student: student)

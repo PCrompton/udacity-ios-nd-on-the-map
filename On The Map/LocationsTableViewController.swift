@@ -22,11 +22,11 @@ class LocationsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return StudentInformation.students.count
+        return ParseClient.StudentInformation.students.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let student = StudentInformation.students[indexPath.row]
+        let student = ParseClient.StudentInformation.students[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "StudentInformationCell", for: indexPath)
         
         
@@ -42,7 +42,7 @@ class LocationsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let student = StudentInformation.students[indexPath.row]
+        let student = ParseClient.StudentInformation.students[indexPath.row]
         student.openMediaURL(sender: self)
     }
 }

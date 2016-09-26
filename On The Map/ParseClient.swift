@@ -8,22 +8,13 @@
 
 import Foundation
 
-class ParseClient: NSObject {
+class ParseClient: SuperClient {
 
-    // MARK: Properties
-    var session = URLSession.shared
-    //var config = ParseConfig()
-    
-    override init() {
-        super.init()
-    }
-    
     func taskForGETMethod(_ method: String, parameters: [String:Any], completionHandlerForGET: @escaping (_ result: [String: Any]?, _ error: NSError?) -> Void) -> URLSessionDataTask {
 
         let session = URLSession.shared
-        var request = URLRequest(url: parseClientURLFromParameters(parameters: parameters))
-        request.addValue(Constants.AppId, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(Constants.ApiKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+
+        let request = createGetRequest(with: parameters)
         
         let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
             guard (error == nil) else {
@@ -38,6 +29,13 @@ class ParseClient: NSObject {
         })
         
         return task
+    }
+    
+    func createGetRequest(with parameters: [String: Any]) -> URLRequest {
+        var request = URLRequest(url: parseClientURLFromParameters(parameters: parameters))
+        request.addValue(Constants.AppId, forHTTPHeaderField: HTTPHeaderKeys.AppId)
+        request.addValue(Constants.ApiKey, forHTTPHeaderField: HTTPHeaderKeys.ApiKey)
+        return request
     }
     
     // Mark: Helper Functions

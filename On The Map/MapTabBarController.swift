@@ -9,11 +9,18 @@
 import UIKit
 
 class MapTabBarController: UITabBarController {
-
+    
+    var loginSession: UdacityClient.LoginSession?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        StudentInformation.fetchStudents() {
+        if loginSession == nil {
+            let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+            present(loginVC, animated: true, completion: nil)
+        }
+        
+        ParseClient.StudentInformation.fetchStudents() {
             self.updateChildren()
         }
      }

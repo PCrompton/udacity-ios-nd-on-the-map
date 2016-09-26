@@ -40,5 +40,9 @@ extension ParseClient {
         static let Limit = 100
     }
     
+    struct HTTPHeaderKeys {
+        static let AppId = "X-Parse-Application-Id"
+        static let ApiKey = "X-Parse-REST-API-Key"
+    }
 
 }

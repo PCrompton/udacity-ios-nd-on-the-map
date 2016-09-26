@@ -10,8 +10,8 @@ import UIKit
 import MapKit
 
 class StudentAnnotation: MKPointAnnotation {
-    let student: StudentInformation
-    init(student: StudentInformation) {
+    let student: ParseClient.StudentInformation
+    init(student: ParseClient.StudentInformation) {
         self.student = student
         super.init()
         let lat = CLLocationDegrees(student.latitude)
