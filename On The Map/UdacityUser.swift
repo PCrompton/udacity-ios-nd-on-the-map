@@ -18,6 +18,10 @@ extension UdacityClient {
         init(userId: String) {
             self.userId = userId
             
+            
+            let session = URLSession.shared
+            
+            
             self.firstName = ""
             self.lastName = ""
         }

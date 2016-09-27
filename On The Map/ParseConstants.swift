@@ -21,6 +21,16 @@ extension ParseClient {
         static let ApiScheme = "https"
         static let ApiHost = "parse.udacity.com"
         static let ApiPath = "/parse/classes"
+        
+        static var urlComponents: URLComponents {
+            get {
+                var components = URLComponents()
+                components.scheme = ApiScheme
+                components.host = ApiHost
+                components.path = ApiPath
+                return components
+            }
+        }
     }
     
     

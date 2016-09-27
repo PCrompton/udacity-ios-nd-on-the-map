@@ -48,9 +48,13 @@ extension ParseClient {
         }
         
         public static func fetchStudents(completion: (() -> Void)?) {
-            let client = ParseClient.sharedInstance()
             
-            let task = client.taskForGETMethod(ParseClient.Methods.StudentLocation, parameters: [ParseClient.ParameterKeys.Limit: ParseClient.ParameterValues.Limit], completionHandlerForGET: { (results, error) in
+            let client = ParseClient.sharedInstance()
+            let parameters = [ParameterKeys.Limit: ParameterValues.Limit]
+            let url = client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: parameters)
+            let headers = [HTTPHeaderKeys.ApiKey: Constants.ApiKey, HTTPHeaderKeys.AppId: Constants.AppId]
+            
+            let task = client.createTask(for: url, as: HTTPMethod.get, with: headers, taskCompletion: { (results, error) in
                 
                 guard let results = results?["results"] as? [[String: Any]] else {
                     fatalError("No key \"results\" found")
