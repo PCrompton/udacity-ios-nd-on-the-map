@@ -35,6 +35,7 @@ class MapTabBarController: UITabBarController {
     
     func presentLoginVC() {
         let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+        loginVC.mapTabBarController = self
         present(loginVC, animated: true, completion: nil)
     }
     
@@ -44,6 +45,9 @@ class MapTabBarController: UITabBarController {
     }
 
     @IBAction func pinButton(_ sender: AnyObject) {
+        let infoPostingVC = storyboard?.instantiateViewController(withIdentifier: "InformationPostingViewController") as! InformationPostingViewController
+        infoPostingVC.loginSession = loginSession
+        present(infoPostingVC, animated: true, completion: nil)
     }
     
     @IBAction func refreshButton(_ sender: AnyObject) {

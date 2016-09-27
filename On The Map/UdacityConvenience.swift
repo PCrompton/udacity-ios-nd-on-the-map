@@ -17,7 +17,6 @@ extension UdacityClient {
         func getHTTPBody() -> String {
             return "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
         }
-        
         func login(sender: LoginViewController, completion: (() -> Void)?) {
             let client = UdacityClient.sharedInstance()
             let task = client.taskForPOSTMethod(Methods.session, body: self.getHTTPBody(), completionHandlerForPOST: { (result, error) in

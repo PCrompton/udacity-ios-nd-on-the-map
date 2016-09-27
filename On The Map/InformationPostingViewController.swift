@@ -10,19 +10,21 @@ import UIKit
 import MapKit
 
 class InformationPostingViewController: UIViewController {
-
+    var loginSession: UdacityClient.LoginSession? = nil
+    
+    @IBOutlet weak var userName: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        if let loginSession = loginSession {
+            userName.text = "\(loginSession.user.firstName) \(loginSession.user.lastName)"
+        }
     }
 
     @IBAction func cancelButton(_ sender: AnyObject) {
         dismiss(animated: true, completion: nil)
     }
 
+    @IBAction func submitButton(_ sender: AnyObject) {
+    }
 
 }

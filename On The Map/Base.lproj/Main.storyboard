@@ -139,15 +139,13 @@
                                 <frame key="frameInset" minY="372" width="414" height="364"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bae-2n-dVg">
-                                <frame key="frameInset" minX="184" minY="614" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Submit">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                            </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="6dJ-dP-BxR">
                                 <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hJJ-pr-Ccv">
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Location" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="g1C-HF-lAO">
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -162,6 +160,14 @@
                                         <state key="normal" title="Find on the Map">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bae-2n-dVg">
+                                        <state key="normal" title="Submit">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="submitButton:" destination="Wdk-wl-fUb" eventType="touchUpInside" id="PHH-aq-dIe"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -178,6 +184,9 @@
                             <constraint firstItem="6dJ-dP-BxR" firstAttribute="top" secondItem="K1w-wc-wcM" secondAttribute="bottom" constant="157" id="s0v-Er-nvd"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="userName" destination="hJJ-pr-Ccv" id="wIY-QS-I51"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K8b-VF-uri" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -218,7 +227,6 @@
                             <barButtonItem image="pin" id="n3q-MJ-xQC">
                                 <connections>
                                     <action selector="pinButton:" destination="FqL-yo-52H" id="fBA-fK-qQJ"/>
-                                    <segue destination="Wdk-wl-fUb" kind="presentation" id="fXE-xY-ob4"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
