@@ -62,15 +62,28 @@ class SuperClient: NSObject {
         return request
     }
     
+    func serializeDataToJson(data: Data) throws -> [String: Any]? {
+        let parsedResult: [String: Any]?
+            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+        return parsedResult
+    }
+    
     func convertDataWithCompletionHandler(data: Data, completionHandlerForConvertData: (_ result: [String: Any]?, _ error: NSError?) -> Void) {
         let parsedResult: [String: Any]?
         do {
-            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+            parsedResult = try serializeDataToJson(data: data)
             completionHandlerForConvertData(parsedResult, nil)
         } catch {
-            let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-            completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
+            let newData = data.subdata(in: Range(5...data.count))
+            do {
+                parsedResult = try serializeDataToJson(data: newData)
+                completionHandlerForConvertData(parsedResult, nil)
+            } catch {
+                let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
+                completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
+            }
         }
+        
     }
 
 }

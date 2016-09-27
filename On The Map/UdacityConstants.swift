@@ -17,6 +17,16 @@ extension UdacityClient {
         static let ApiScheme = "https"
         static let ApiHost = "www.udacity.com"
         static let ApiPath = "/api"
+        
+        static var urlComponents: URLComponents {
+            get {
+                var components = URLComponents()
+                components.scheme = ApiScheme
+                components.host = ApiHost
+                components.path = ApiPath
+                return components
+            }
+        }
     }
     
     struct Methods {
