@@ -18,10 +18,10 @@ extension ParseClient {
         let uniqueKey: String
         let firstName: String
         let lastName: String
-        let mapString: String
+        let mapString: String?
         let mediaURL: URL?
-        let latitude: Double
-        let longitude: Double
+        let latitude: Double?
+        let longitude: Double?
         
         init(jsonDict: [String:Any?]) {
             
@@ -29,10 +29,26 @@ extension ParseClient {
             uniqueKey = jsonDict[StudentKeys.uniqueKey] as! String
             firstName = jsonDict[StudentKeys.firstName] as! String
             lastName = jsonDict[StudentKeys.lastName] as! String
-            mapString = jsonDict[StudentKeys.mapString] as! String
-            mediaURL = URL(string: jsonDict[StudentKeys.mediaURL] as! String)
-            latitude = jsonDict[StudentKeys.latitude] as! Double
-            longitude = jsonDict[StudentKeys.longitude] as! Double
+            if let result = jsonDict[StudentKeys.mapString] as? String {
+                mapString = result
+            } else {
+                mapString = nil
+            }
+            if let result = jsonDict[StudentKeys.mediaURL] as? String {
+                mediaURL = URL(string: result)
+            } else {
+                mediaURL = nil
+            }
+            if let result = jsonDict[StudentKeys.latitude] as? Double {
+                latitude = result
+            } else {
+                latitude = nil
+            }
+            if let result = jsonDict[StudentKeys.longitude] as? Double {
+                longitude = result
+            } else {
+                longitude = nil
+            }
         }
         
         func openMediaURL(sender: UIViewController) {
@@ -61,7 +77,9 @@ extension ParseClient {
                 }
                 for result in results {
                     let student = StudentInformation(jsonDict: result)
-                    students.append(student)
+                    if student.longitude != nil && student.latitude != nil {
+                        students.append(student)
+                    }
                 }
                 completion?()
             })

@@ -14,8 +14,8 @@ class StudentAnnotation: MKPointAnnotation {
     init(student: ParseClient.StudentInformation) {
         self.student = student
         super.init()
-        let lat = CLLocationDegrees(student.latitude)
-        let long = CLLocationDegrees(student.longitude)
+        let lat = CLLocationDegrees(student.latitude!)
+        let long = CLLocationDegrees(student.longitude!)
         self.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         self.title = "\(student.firstName) \(student.lastName)"
         self.subtitle = student.mediaURL?.absoluteString

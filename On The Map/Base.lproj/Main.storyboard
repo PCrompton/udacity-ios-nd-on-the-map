@@ -160,6 +160,9 @@
                                         <state key="normal" title="Find on the Map">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
+                                        <connections>
+                                            <action selector="findOnMapButton:" destination="Wdk-wl-fUb" eventType="touchUpInside" id="dTz-gv-5JW"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bae-2n-dVg">
                                         <state key="normal" title="Submit">
@@ -185,6 +188,9 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="mapStringTextField" destination="g1C-HF-lAO" id="8PA-k1-ubb"/>
+                        <outlet property="mapView" destination="EuM-we-y1i" id="JE2-5S-rCY"/>
+                        <outlet property="mediaURLTextField" destination="XYK-eP-v0m" id="xhv-V4-CWl"/>
                         <outlet property="userName" destination="hJJ-pr-Ccv" id="wIY-QS-I51"/>
                     </connections>
                 </viewController>
