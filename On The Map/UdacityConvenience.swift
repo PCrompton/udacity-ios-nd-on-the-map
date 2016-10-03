@@ -17,63 +17,71 @@ extension UdacityClient {
         func getHTTPBody() -> String {
             return "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
         }
-        func login(sender: LoginViewController, completion: (() -> Void)?) {
+        func login(completion: (() -> Void)?) {
             let client = UdacityClient.sharedInstance()
             let task = client.taskForPOSTMethod(Methods.session, body: self.getHTTPBody(), completionHandlerForPOST: { (result, error) in
-                guard error == nil else {
-                    fatalError("An error was found: \(error!)")
-                }
-                guard let result = result else {
-                    fatalError("No result found")
-                }
-                guard let account = result["account"] as? [String: Any] else {
-                    fatalError("Failed to retrieve account")
-                }
-                guard let registered = account["registered"] as? Bool else {
-                    fatalError("Failed to retrieve registered status")
-                }
-                guard registered == true else {
-                    fatalError("User not registered")
-                }
-                guard let userId = account["key"] as? String else {
-                    fatalError("Failed to retrieve key")
-                }
-                guard let session = result["session"] as? [String: Any] else {
-                    fatalError("Failed to retrieve session")
-                }
-                guard let sessionId = session["id"] as? String else {
-                    fatalError("Failed to retrieve 'id' in session")
-                }
-                guard let expiration = session["expiration"] as? String else {
-                    fatalError("Failed to retrieve 'expiration' in session")
-                }
-                let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.users)/\(userId)", with: nil)
-                let task = client.createTask(for: url, as: HTTPMethod.get, with: nil) { (result, error) in
+                performUpdatesOnMain {
                     guard error == nil else {
-                        fatalError("Error getting request \(error)")
+                        fatalError("An error was found: \(error!)")
                     }
                     guard let result = result else {
-                        fatalError("Result not found")
+                        fatalError("No result found")
                     }
-                    guard let user = result["user"] as? [String: Any] else {
-                        fatalError("User not found")
+                    guard let account = result["account"] as? [String: Any] else {
+                        fatalError("Failed to retrieve account")
                     }
-                    guard let lastName = user["last_name"] as? String else {
-                        fatalError("Last name not found")
+                    guard let registered = account["registered"] as? Bool else {
+                        fatalError("Failed to retrieve registered status")
                     }
-                    guard let firstName = user["first_name"] as? String else {
-                        fatalError("First name not found")
+                    guard registered == true else {
+                        fatalError("User not registered")
                     }
-                    sender.loginSession = LoginSession(id: sessionId, expiration: expiration, user: User(userId: userId, firstName: firstName, lastName: lastName))
+                    guard let userId = account["key"] as? String else {
+                        fatalError("Failed to retrieve key")
+                    }
+                    guard let session = result["session"] as? [String: Any] else {
+                        fatalError("Failed to retrieve session")
+                    }
+                    guard let sessionId = session["id"] as? String else {
+                        fatalError("Failed to retrieve 'id' in session")
+                    }
+                    guard let expiration = session["expiration"] as? String else {
+                        fatalError("Failed to retrieve 'expiration' in session")
+                    }
+                    let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.users)/\(userId)", with: nil)
+                    let task = client.createTask(for: url, as: HTTPMethod.get, with: nil, with: nil) { (result, error) in
+                        performUpdatesOnMain {
+                            guard error == nil else {
+                                fatalError("Error getting request \(error)")
+                            }
+                            guard let result = result else {
+                                fatalError("Result not found")
+                            }
+                            guard let user = result["user"] as? [String: Any] else {
+                                fatalError("User not found")
+                            }
+                            guard let lastName = user["last_name"] as? String else {
+                                fatalError("Last name not found")
+                            }
+                            guard let firstName = user["first_name"] as? String else {
+                                fatalError("First name not found")
+                            }
+                            UdacityClient.LoginSession.currentLoginSession = LoginSession(id: sessionId, expiration: expiration, user: User(userId: userId, firstName: firstName, lastName: lastName))
+                            completion?()
+                        }
+                    }
+                    task.resume()
                 }
-                task.resume()
             })
             task.resume()
-            completion?()
+            
         }
     }
     
     struct LoginSession {
+        
+        static var currentLoginSession: LoginSession?
+        
         let id: String
         let expiration: String
         let user: User

@@ -17,4 +17,13 @@ extension SuperClient {
         case put = "PUT"
         case delete = "DELETE"
     }
+    
+    struct HTTPHeaderKeys {
+        static let accept = "Accept"
+        static let contentType = "Content-Type"
+    }
+    
+    struct HTTPHeaderValues {
+        static let json = "application/json"
+    }
 }

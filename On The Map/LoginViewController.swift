@@ -12,22 +12,16 @@ class LoginViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    var mapTabBarController: MapTabBarController? = nil
-    var loginSession: UdacityClient.LoginSession? {
-        didSet {
-            if let mapTabBarController = mapTabBarController {
-                mapTabBarController.loginSession = loginSession
-            }
-        }
-    }
+    var mapTabBarController: MapTabBarController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //Test Only
-        emailTextField.text = "john.doe89@gmail.com"
-        passwordTextField.text = "password"
+//        //Test Only
+        emailTextField.text = "beethoven89.paul@gmail.com"
+        passwordTextField.text = "ew4QyBU#eWET6BOEnpqDroDMj9gkfsa&"
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -37,12 +31,13 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButton() {
-        
+        activityIndicator.startAnimating()
         guard let username = emailTextField.text, let password = passwordTextField.text else {
             return
         }
         
-        UdacityClient.HTTPBody(username: username, password: password).login(sender: self) { () in
+        UdacityClient.HTTPBody(username: username, password: password).login() {
+            self.activityIndicator.stopAnimating()
             self.dismiss(animated: true, completion: nil)
         }
     }

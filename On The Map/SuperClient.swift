@@ -33,10 +33,17 @@ class SuperClient: NSObject {
         return components.url!
     }
     
-    func createTask(for url: URL, as httpMethod: HTTPMethod?, with headers: [String:String]?, taskCompletion: @escaping (_ result: [String: Any]?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+    func createAndRunTask(for url: URL, as httpMethod: HTTPMethod?, with headers: [String: String]?, with body: String?, taskCompletion: @escaping (_ result: [String: Any]?, _ error: NSError?) -> Void) {
         
+        let task = createTask(for: url, as: httpMethod, with: headers, with: body, taskCompletion: taskCompletion)
+        task.resume()
+    }
+    
+    func createTask(for url: URL, as httpMethod: HTTPMethod?, with headers: [String:String]?, with body: String?, taskCompletion: @escaping (_ result: [String: Any]?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+        print(body)
         let session = URLSession.shared
-        let request = createRequest(for: url, with: headers)
+        let request = createRequest(for: url, as: httpMethod, with: headers, with: body)
+        print(request.httpBody?.hashValue)
         let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
             guard (error == nil) else {
                 fatalError("\(error)")
@@ -52,12 +59,18 @@ class SuperClient: NSObject {
         return task
     }
     
-    func createRequest(for url: URL, with headers: [String: String]?) -> URLRequest {
+    func createRequest(for url: URL, as type: HTTPMethod?, with headers: [String: String]?, with body: String?) -> URLRequest {
         var request = URLRequest(url: url)
         if let headers = headers {
             for (key, value) in headers {
                 request.addValue(value, forHTTPHeaderField: key)
             }
+        }
+        if let type = type {
+            request.httpMethod = type.rawValue
+        }
+        if let body = body {
+            request.httpBody = body.data(using: String.Encoding.utf8)
         }
         return request
     }

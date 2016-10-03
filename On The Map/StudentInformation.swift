@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 
 extension ParseClient {
-   public struct StudentInformation {
-        
+    public struct StudentInformation {
+    
+        public static let client = ParseClient.sharedInstance()
         public static var students = [StudentInformation]()
         
         let objectId: String
@@ -51,6 +52,25 @@ extension ParseClient {
             }
         }
         
+        init(objectId: String,
+             uniqueKey: String,
+             firstName: String,
+             lastName: String,
+             mapString: String?,
+             mediaURL: URL?,
+             latitude: Double?,
+             longitude: Double?
+            ) {
+            self.objectId = objectId
+            self.uniqueKey = uniqueKey
+            self.firstName = firstName
+            self.lastName = lastName
+            self.mapString = mapString
+            self.mediaURL = mediaURL
+            self.latitude = latitude
+            self.longitude = longitude
+        }
+        
         func openMediaURL(sender: UIViewController) {
             if let url = mediaURL {
                 UIApplication.shared.open(url, options: [:])
@@ -62,16 +82,17 @@ extension ParseClient {
             }
 
         }
-        
+
         public static func fetchStudents(completion: (() -> Void)?) {
-            
-            let client = ParseClient.sharedInstance()
+            students.removeAll()
             let parameters = [ParameterKeys.Limit: ParameterValues.Limit]
             let url = client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: parameters)
-            let headers = [HTTPHeaderKeys.ApiKey: Constants.ApiKey, HTTPHeaderKeys.AppId: Constants.AppId]
-            
-            let task = client.createTask(for: url, as: HTTPMethod.get, with: headers, taskCompletion: { (results, error) in
-                
+            let headers = [
+                HTTPHeaderKeys.ApiKey: Constants.ApiKey,
+                HTTPHeaderKeys.AppId: Constants.AppId
+            ]
+        
+            client.createAndRunTask(for: url, as: HTTPMethod.get, with: headers, with: nil) { (results, error) in
                 guard let results = results?["results"] as? [[String: Any]] else {
                     fatalError("No key \"results\" found")
                 }
@@ -82,10 +103,41 @@ extension ParseClient {
                     }
                 }
                 completion?()
-            })
-            task.resume()
+            }
         }
         
+        public func postStudent(completion: (() -> Void)?) {
+            let url = StudentInformation.client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: nil)
+            let headers = [
+                HTTPHeaderKeys.ApiKey: Constants.ApiKey,
+                HTTPHeaderKeys.AppId: Constants.AppId,
+                SuperClient.HTTPHeaderKeys.contentType: HTTPHeaderValues.json
+            ]
+            let body = getBody()
+            print(body)
+            StudentInformation.client.createAndRunTask(for: url, as: HTTPMethod.post, with: headers, with: body) { (results, error) in
+                guard let results = results else {
+                    fatalError("No results returned")
+                }
+                for (key, value) in results {
+                    print("\(key): \(value)")
+                }
+                
+                guard results["objectId"] as? String != nil else {
+                    fatalError("no \"objectId\" field found")
+                }
+                guard results["createdAt"] as? String != nil else {
+                    fatalError("no \"createdAt\" field found")
+                }
+
+               completion?()
+            }
+        }
+        
+        func getBody() -> String {
+            return "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString!)\", \"mediaURL\": \"\(mediaURL!.absoluteString)\", \"latitude\": \(latitude!), \"longitude\": \(longitude!)}"
+        }
+    
         private struct StudentKeys {
             static let objectId = "objectId"
             static let uniqueKey = "uniqueKey"
@@ -96,6 +148,5 @@ extension ParseClient {
             static let latitude = "latitude"
             static let longitude = "longitude"
         }
-
     }
 }

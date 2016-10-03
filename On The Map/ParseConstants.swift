@@ -32,8 +32,7 @@ extension ParseClient {
             }
         }
     }
-    
-    
+
     struct Methods {
         static let StudentLocation = "/StudentLocation"
     }

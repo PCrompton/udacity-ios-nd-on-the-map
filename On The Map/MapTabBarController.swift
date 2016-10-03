@@ -10,18 +10,22 @@ import UIKit
 
 class MapTabBarController: UITabBarController {
     
-    var loginSession: UdacityClient.LoginSession?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if loginSession == nil {
+        if UdacityClient.LoginSession.currentLoginSession == nil {
             presentLoginVC()
         }
         ParseClient.StudentInformation.fetchStudents() {
             self.updateChildren()
         }
      }
+    
+    func fetchStudentsAndUpdate() {
+        ParseClient.StudentInformation.fetchStudents { 
+            self.updateChildren()
+        }
+    }
     
     func updateChildren() {
         for child in childViewControllers {
@@ -40,17 +44,18 @@ class MapTabBarController: UITabBarController {
     }
     
     @IBAction func logoutButton(_ sender: AnyObject) {
-        loginSession = nil
+        UdacityClient.LoginSession.currentLoginSession = nil
         presentLoginVC()
     }
 
     @IBAction func pinButton(_ sender: AnyObject) {
         let infoPostingVC = storyboard?.instantiateViewController(withIdentifier: "InformationPostingViewController") as! InformationPostingViewController
-        infoPostingVC.loginSession = loginSession
         present(infoPostingVC, animated: true, completion: nil)
     }
     
     @IBAction func refreshButton(_ sender: AnyObject) {
-        updateChildren()
+        ParseClient.StudentInformation.fetchStudents { 
+            self.updateChildren()
+        }
     }
 }

@@ -10,9 +10,6 @@ import Foundation
 
 class ParseClient: SuperClient {
 
-    // Mark: Helper Functions
-
-    
     // MARK: Shared Instance
     class func sharedInstance() -> ParseClient {
         struct Singleton {

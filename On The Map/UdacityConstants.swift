@@ -33,14 +33,4 @@ extension UdacityClient {
         static let session = "/session"
         static let users = "/users"
     }
-    
-    struct HTTPHeaderKeys {
-        static let accept = "Accept"
-        static let contentType = "Content-Type"
-    }
-    
-    struct HTTPHeaderValues {
-        static let json = "application/json"
-    }
-    
 }

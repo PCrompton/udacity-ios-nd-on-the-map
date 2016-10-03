@@ -10,20 +10,22 @@ import UIKit
 import MapKit
 
 class InformationPostingViewController: UIViewController, MKMapViewDelegate {
-    var loginSession: UdacityClient.LoginSession? = nil
+    
+    var coordinate: CLLocationCoordinate2D?
     
     @IBOutlet weak var userName: UILabel!
-    
     @IBOutlet weak var mapStringTextField: UITextField!
-    
     @IBOutlet weak var mediaURLTextField: UITextField!
-    
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var actionIndicator: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let loginSession = loginSession {
+        if let loginSession = UdacityClient.LoginSession.currentLoginSession {
             userName.text = "\(loginSession.user.firstName) \(loginSession.user.lastName)"
         }
+        mapStringTextField.text = "Lowell, MA"
+        mediaURLTextField.text = "http://cromptonmusic.com"
     }
 
     @IBAction func cancelButton(_ sender: AnyObject) {
@@ -31,41 +33,76 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     }
 
     @IBAction func findOnMapButton(_ sender: AnyObject) {
+        
+        setLocation() {
+            if self.coordinate != nil {
+                let annotation = MKPointAnnotation()
+                self.coordinate = annotation.coordinate
+                self.mapView.addAnnotation(annotation)
+            }
+        }
+    }
+
+    func setLocation(completion: (() -> Void)?) {
+       
         let request = MKLocalSearchRequest()
-        request.naturalLanguageQuery = mapStringTextField.text
+        request.naturalLanguageQuery = self.mapStringTextField.text
         let search = MKLocalSearch(request: request)
         search.start { (response, error) in
-            guard (error == nil) else {
+  
+            guard error == nil else {
                 fatalError("Could not complete search")
             }
-            
             guard let response = response else {
                 fatalError("No response found")
             }
-            
             if let location = response.mapItems.first {
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = location.placemark.coordinate
-                self.mapView.addAnnotation(annotation)
-                
+                self.coordinate = location.placemark.coordinate
             }
-
-            
+            completion?()
         }
-        
     }
-
+    
     @IBAction func submitButton(_ sender: AnyObject) {
+        actionIndicator.startAnimating()
+        if coordinate == nil {
+            setLocation() {
+                performUpdatesOnMain {
+                    guard let coordinate = self.coordinate else {
+                        fatalError("Unable to get coordinate")
+                    }
+                    if let loginSession = UdacityClient.LoginSession.currentLoginSession {
+                        let uniqueKey = loginSession.user.userId
+                        let firstName = loginSession.user.firstName
+                        let lastName = loginSession.user.lastName
+                        let mapString = self.mapStringTextField.text
+                        let mediaURL = URL(string: self.mediaURLTextField.text!)
+                        let latitude = coordinate.latitude
+                        let longitude = coordinate.longitude
+                        let student = ParseClient.StudentInformation.init(objectId: String(), uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
+                        
+                        student.postStudent(completion: {
+                            self.actionIndicator.stopAnimating()
+                            self.dismiss(animated: true, completion: nil)
+                        })
+                        
+                    } else {
+                        fatalError("No login session found")
+                    }
+                }
+            }
+        }
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
         
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
+            pinView!.pinTintColor = .red
             pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         else {
