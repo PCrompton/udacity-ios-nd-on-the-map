@@ -14,12 +14,18 @@ extension UdacityClient {
         let username: String
         let password: String
         
-        func getHTTPBody() -> String {
-            return "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
+        var body: String {
+            get {
+                return "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
+            }
         }
         func login(completion: (() -> Void)?) {
             let client = UdacityClient.sharedInstance()
-            let task = client.taskForPOSTMethod(Methods.session, body: self.getHTTPBody(), completionHandlerForPOST: { (result, error) in
+            //let url = client.udacityClientURL(from: nil)
+            let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.session)", with: nil)
+            let httpHeaders = [HTTPHeaderKeys.accept: HTTPHeaderValues.json, HTTPHeaderKeys.contentType: HTTPHeaderValues.json]
+            client.createAndRunTask(for: url, as: HTTPMethod.post, with: httpHeaders, with: body) { (result, error) in
+                
                 performUpdatesOnMain {
                     guard error == nil else {
                         fatalError("An error was found: \(error!)")
@@ -48,8 +54,9 @@ extension UdacityClient {
                     guard let expiration = session["expiration"] as? String else {
                         fatalError("Failed to retrieve 'expiration' in session")
                     }
+                    
                     let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.users)/\(userId)", with: nil)
-                    let task = client.createTask(for: url, as: HTTPMethod.get, with: nil, with: nil) { (result, error) in
+                    client.createAndRunTask(for: url, as: HTTPMethod.get, with: nil, with: nil, taskCompletion: { (result, error) in
                         performUpdatesOnMain {
                             guard error == nil else {
                                 fatalError("Error getting request \(error)")
@@ -69,12 +76,9 @@ extension UdacityClient {
                             UdacityClient.LoginSession.currentLoginSession = LoginSession(id: sessionId, expiration: expiration, user: User(userId: userId, firstName: firstName, lastName: lastName))
                             completion?()
                         }
-                    }
-                    task.resume()
+                    })
                 }
-            })
-            task.resume()
-            
+            }
         }
     }
     
@@ -91,5 +95,9 @@ extension UdacityClient {
         let userId: String
         let firstName: String
         let lastName: String
+    }
+    
+    func getUser(by id: String) {
+        
     }
 }
