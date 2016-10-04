@@ -42,6 +42,7 @@ extension ParseClient {
         static let Limit = "limit"
         static let Skip = "skip"
         static let Order = "order"
+        static let Where = "where"
     }
     
     // MARK: Paremeter Values

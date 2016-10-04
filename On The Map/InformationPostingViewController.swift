@@ -72,6 +72,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                         fatalError("Unable to get coordinate")
                     }
                     if let loginSession = UdacityClient.LoginSession.currentLoginSession {
+                        
                         let uniqueKey = loginSession.user.userId
                         let firstName = loginSession.user.firstName
                         let lastName = loginSession.user.lastName
@@ -79,11 +80,18 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                         let mediaURL = URL(string: self.mediaURLTextField.text!)
                         let latitude = coordinate.latitude
                         let longitude = coordinate.longitude
-                        let student = ParseClient.StudentInformation.init(objectId: String(), uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
                         
-                        student.postStudent(completion: {
-                            self.actionIndicator.stopAnimating()
-                            self.dismiss(animated: true, completion: nil)
+                        ParseClient.StudentInformation.get(by: uniqueKey, { (objectId) in
+                            performUpdatesOnMain {
+                                let student = ParseClient.StudentInformation.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
+                                
+                                student.post(completion: {
+                                    performUpdatesOnMain {
+                                        self.actionIndicator.stopAnimating()
+                                        self.dismiss(animated: true, completion: nil)
+                                    }
+                                })
+                            }
                         })
                         
                     } else {

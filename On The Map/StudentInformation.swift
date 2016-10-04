@@ -15,7 +15,7 @@ extension ParseClient {
         public static let client = ParseClient.sharedInstance()
         public static var students = [StudentInformation]()
         
-        let objectId: String
+        let objectId: String?
         let uniqueKey: String
         let firstName: String
         let lastName: String
@@ -24,9 +24,15 @@ extension ParseClient {
         let latitude: Double?
         let longitude: Double?
         
+        var body: String {
+            get {
+                return "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString!)\", \"mediaURL\": \"\(mediaURL!.absoluteString)\", \"latitude\": \(latitude!), \"longitude\": \(longitude!)}"
+            }
+        }
+        
         init(jsonDict: [String:Any?]) {
             
-            objectId = jsonDict[StudentKeys.objectId] as! String
+            objectId = jsonDict[StudentKeys.objectId] as! String?
             uniqueKey = jsonDict[StudentKeys.uniqueKey] as! String
             firstName = jsonDict[StudentKeys.firstName] as! String
             lastName = jsonDict[StudentKeys.lastName] as! String
@@ -52,7 +58,7 @@ extension ParseClient {
             }
         }
         
-        init(objectId: String,
+        init(objectId: String?,
              uniqueKey: String,
              firstName: String,
              lastName: String,
@@ -69,6 +75,7 @@ extension ParseClient {
             self.mediaURL = mediaURL
             self.latitude = latitude
             self.longitude = longitude
+            
         }
         
         func openMediaURL(sender: UIViewController) {
@@ -106,16 +113,22 @@ extension ParseClient {
             }
         }
         
-        public func postStudent(completion: (() -> Void)?) {
+        func post(completion: (() -> Void)?) {
+            
+            let httpMethod: HTTPMethod
+            if objectId != nil {
+                httpMethod = HTTPMethod.put
+            } else {
+                httpMethod = HTTPMethod.post
+            }
+            
             let url = StudentInformation.client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: nil)
             let headers = [
                 HTTPHeaderKeys.ApiKey: Constants.ApiKey,
                 HTTPHeaderKeys.AppId: Constants.AppId,
                 SuperClient.HTTPHeaderKeys.contentType: HTTPHeaderValues.json
             ]
-            let body = getBody()
-            print(body)
-            StudentInformation.client.createAndRunTask(for: url, as: HTTPMethod.post, with: headers, with: body) { (results, error) in
+            StudentInformation.client.createAndRunTask(for: url, as: httpMethod, with: headers, with: body) { (results, error) in
                 guard let results = results else {
                     fatalError("No results returned")
                 }
@@ -134,10 +147,25 @@ extension ParseClient {
             }
         }
         
-        func getBody() -> String {
-            return "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString!)\", \"mediaURL\": \"\(mediaURL!.absoluteString)\", \"latitude\": \(latitude!), \"longitude\": \(longitude!)}"
+        static func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?) -> Void)) {
+            let method = Methods.StudentLocation
+            let parameters = [ParameterKeys.Where: "%7B%22\(StudentKeys.uniqueKey)%22%3A%\(uniqueKey)%22%7D"]
+            let url = StudentInformation.client.getURL(for: Constants.urlComponents, with: method, with: parameters)
+            let httpHeaders = [HTTPHeaderKeys.ApiKey: Constants.ApiKey, HTTPHeaderKeys.AppId: Constants.AppId]
+            StudentInformation.client.createAndRunTask(for: url, as: HTTPMethod.get, with: httpHeaders, with: nil) { (results, error) in
+                performUpdatesOnMain {
+                    guard error == nil else {
+                        fatalError("No Results Found")
+                    }
+                    if let objectId = results?[StudentKeys.objectId] as? String {
+                        completion(objectId)
+                    } else {
+                        completion(nil)
+                    }
+                }
+            }
         }
-    
+        
         private struct StudentKeys {
             static let objectId = "objectId"
             static let uniqueKey = "uniqueKey"
