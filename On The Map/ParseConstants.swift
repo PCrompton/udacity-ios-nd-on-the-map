@@ -35,6 +35,7 @@ extension ParseClient {
 
     struct Methods {
         static let StudentLocation = "/StudentLocation"
+        
     }
     
     // MARK: Parameter Keys
@@ -48,6 +49,10 @@ extension ParseClient {
     // MARK: Paremeter Values
     struct ParameterValues {
         static let Limit = 100
+        
+        static func Where(uniqueKey: String) -> String {
+            return "{\"\(StudentInformation.StudentKeys.uniqueKey)\":\"\(uniqueKey)\"}"
+        }
     }
     
     struct HTTPHeaderKeys {

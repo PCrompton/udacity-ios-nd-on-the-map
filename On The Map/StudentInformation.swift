@@ -116,13 +116,16 @@ extension ParseClient {
         func post(completion: (() -> Void)?) {
             
             let httpMethod: HTTPMethod
+            let apiMethod: String
             if objectId != nil {
                 httpMethod = HTTPMethod.put
+                apiMethod = "\(Methods.StudentLocation)/\(objectId)"
             } else {
                 httpMethod = HTTPMethod.post
+                apiMethod = Methods.StudentLocation
             }
             
-            let url = StudentInformation.client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: nil)
+            let url = StudentInformation.client.getURL(for: Constants.urlComponents, with: apiMethod, with: nil)
             let headers = [
                 HTTPHeaderKeys.ApiKey: Constants.ApiKey,
                 HTTPHeaderKeys.AppId: Constants.AppId,
@@ -149,8 +152,10 @@ extension ParseClient {
         
         static func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?) -> Void)) {
             let method = Methods.StudentLocation
-            let parameters = [ParameterKeys.Where: "%7B%22\(StudentKeys.uniqueKey)%22%3A%\(uniqueKey)%22%7D"]
-            let url = StudentInformation.client.getURL(for: Constants.urlComponents, with: method, with: parameters)
+            let parameters = [ParameterKeys.Where: ParameterValues.Where(uniqueKey: uniqueKey)]
+            let url = URL(string: StudentInformation.client.getURL(for: Constants.urlComponents, with: method, with: parameters).absoluteString.replacingOccurrences(of: "%22:%22", with: "%22%3A%22"))!
+            print(url.absoluteString)
+            print(parameters)
             let httpHeaders = [HTTPHeaderKeys.ApiKey: Constants.ApiKey, HTTPHeaderKeys.AppId: Constants.AppId]
             StudentInformation.client.createAndRunTask(for: url, as: HTTPMethod.get, with: httpHeaders, with: nil) { (results, error) in
                 performUpdatesOnMain {
@@ -166,7 +171,7 @@ extension ParseClient {
             }
         }
         
-        private struct StudentKeys {
+        struct StudentKeys {
             static let objectId = "objectId"
             static let uniqueKey = "uniqueKey"
             static let firstName = "firstName"
