@@ -43,6 +43,7 @@ class SuperClient: NSObject {
         print(body)
         let session = URLSession.shared
         let request = createRequest(for: url, as: httpMethod, with: headers, with: body)
+        print(url)
         print(request.httpBody?.hashValue)
         let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
             guard (error == nil) else {

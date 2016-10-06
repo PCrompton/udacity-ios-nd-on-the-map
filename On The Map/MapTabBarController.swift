@@ -22,7 +22,7 @@ class MapTabBarController: UITabBarController {
      }
     
     func fetchStudentsAndUpdate() {
-        ParseClient.StudentInformation.fetchStudents { 
+        ParseClient.StudentInformation.fetchStudents{
             self.updateChildren()
         }
     }
@@ -50,6 +50,7 @@ class MapTabBarController: UITabBarController {
 
     @IBAction func pinButton(_ sender: AnyObject) {
         let infoPostingVC = storyboard?.instantiateViewController(withIdentifier: "InformationPostingViewController") as! InformationPostingViewController
+        infoPostingVC.mapTabBarController = self
         present(infoPostingVC, animated: true, completion: nil)
     }
     

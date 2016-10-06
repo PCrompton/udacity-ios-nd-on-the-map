@@ -32,8 +32,8 @@ class LocationsTableViewController: UITableViewController {
         
         cell.textLabel?.text = "\(student.firstName) \(student.lastName)"
         
-        if let url = student.mediaURL {
-            cell.detailTextLabel?.text = url.absoluteString
+        if let mapString = student.mapString {
+            cell.detailTextLabel?.text = mapString
         } else {
             cell.detailTextLabel?.text = ""
         }

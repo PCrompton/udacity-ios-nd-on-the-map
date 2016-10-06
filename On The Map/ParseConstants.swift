@@ -49,7 +49,7 @@ extension ParseClient {
     // MARK: Paremeter Values
     struct ParameterValues {
         static let Limit = 100
-        
+        static let Order = "-updatedAt"
         static func Where(uniqueKey: String) -> String {
             return "{\"\(StudentInformation.StudentKeys.uniqueKey)\":\"\(uniqueKey)\"}"
         }

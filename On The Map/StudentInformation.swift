@@ -91,8 +91,8 @@ extension ParseClient {
         }
 
         public static func fetchStudents(completion: (() -> Void)?) {
-            students.removeAll()
-            let parameters = [ParameterKeys.Limit: ParameterValues.Limit]
+            StudentInformation.students.removeAll()
+            let parameters: [String: Any] = [ParameterKeys.Limit: ParameterValues.Limit, ParameterKeys.Order: ParameterValues.Order]
             let url = client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: parameters)
             let headers = [
                 HTTPHeaderKeys.ApiKey: Constants.ApiKey,
@@ -106,7 +106,7 @@ extension ParseClient {
                 for result in results {
                     let student = StudentInformation(jsonDict: result)
                     if student.longitude != nil && student.latitude != nil {
-                        students.append(student)
+                        StudentInformation.students.append(student)
                     }
                 }
                 completion?()
@@ -117,7 +117,7 @@ extension ParseClient {
             
             let httpMethod: HTTPMethod
             let apiMethod: String
-            if objectId != nil {
+            if let objectId = objectId {
                 httpMethod = HTTPMethod.put
                 apiMethod = "\(Methods.StudentLocation)/\(objectId)"
             } else {
@@ -132,21 +132,25 @@ extension ParseClient {
                 SuperClient.HTTPHeaderKeys.contentType: HTTPHeaderValues.json
             ]
             StudentInformation.client.createAndRunTask(for: url, as: httpMethod, with: headers, with: body) { (results, error) in
-                guard let results = results else {
-                    fatalError("No results returned")
+                performUpdatesOnMain {
+                    guard let results = results else {
+                        fatalError("No results returned")
+                    }
+                    if httpMethod == HTTPMethod.post {
+                        guard results["objectId"] as? String != nil else {
+                            fatalError("no \"objectId\" field found")
+                        }
+                        guard results["createdAt"] as? String != nil else {
+                            fatalError("no \"createdAt\" field found")
+                        }
+                    } else if httpMethod == HTTPMethod.put {
+                        guard results["updatedAt"] != nil else {
+                            fatalError("no \"updatedAt\" field found")
+                        }
+                    }
+                    
+                    completion?()
                 }
-                for (key, value) in results {
-                    print("\(key): \(value)")
-                }
-                
-                guard results["objectId"] as? String != nil else {
-                    fatalError("no \"objectId\" field found")
-                }
-                guard results["createdAt"] as? String != nil else {
-                    fatalError("no \"createdAt\" field found")
-                }
-
-               completion?()
             }
         }
         
@@ -155,14 +159,13 @@ extension ParseClient {
             let parameters = [ParameterKeys.Where: ParameterValues.Where(uniqueKey: uniqueKey)]
             let url = URL(string: StudentInformation.client.getURL(for: Constants.urlComponents, with: method, with: parameters).absoluteString.replacingOccurrences(of: "%22:%22", with: "%22%3A%22"))!
             print(url.absoluteString)
-            print(parameters)
             let httpHeaders = [HTTPHeaderKeys.ApiKey: Constants.ApiKey, HTTPHeaderKeys.AppId: Constants.AppId]
             StudentInformation.client.createAndRunTask(for: url, as: HTTPMethod.get, with: httpHeaders, with: nil) { (results, error) in
                 performUpdatesOnMain {
                     guard error == nil else {
                         fatalError("No Results Found")
                     }
-                    if let objectId = results?[StudentKeys.objectId] as? String {
+                    if let objectId = (results?["results"] as? [[String: Any]])?[0]["objectId"] as? String {
                         completion(objectId)
                     } else {
                         completion(nil)

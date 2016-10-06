@@ -19,6 +19,8 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var actionIndicator: UIActivityIndicatorView!
     
+    var mapTabBarController: MapTabBarController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if let loginSession = UdacityClient.LoginSession.currentLoginSession {
@@ -87,6 +89,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                                 
                                 student.post(completion: {
                                     performUpdatesOnMain {
+                                        self.mapTabBarController?.refreshButton(self)
                                         self.actionIndicator.stopAnimating()
                                         self.dismiss(animated: true, completion: nil)
                                     }

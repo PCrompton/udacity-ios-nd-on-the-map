@@ -18,6 +18,7 @@ class LocationsMapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func loadStudents() {
+        mapView.removeAnnotations(mapView.annotations)
         var annotations = [StudentAnnotation]()
         let students = ParseClient.StudentInformation.students
         
