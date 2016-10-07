@@ -13,6 +13,8 @@
 		965218FD1D9970E2000E0119 /* SuperClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965218FC1D9970E2000E0119 /* SuperClient.swift */; };
 		965219011D9973F2000E0119 /* ClientConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965219001D9973F2000E0119 /* ClientConstants.swift */; };
 		965219051D9993D7000E0119 /* UdacityConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965219041D9993D7000E0119 /* UdacityConvenience.swift */; };
+		96899AAA1DA7E438003D1C3B /* UIViewController+KeyboardFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96899AA91DA7E438003D1C3B /* UIViewController+KeyboardFunctions.swift */; };
+		96899AAC1DA7E5E2003D1C3B /* UIViewController+TextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96899AAB1DA7E5E2003D1C3B /* UIViewController+TextFieldDelegate.swift */; };
 		968A619B1D8E081C00CD1545 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968A619A1D8E081C00CD1545 /* AppDelegate.swift */; };
 		968A619D1D8E081C00CD1545 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968A619C1D8E081C00CD1545 /* LoginViewController.swift */; };
 		968A61A01D8E081C00CD1545 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 968A619E1D8E081C00CD1545 /* Main.storyboard */; };
@@ -54,6 +56,8 @@
 		965218FC1D9970E2000E0119 /* SuperClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuperClient.swift; sourceTree = "<group>"; };
 		965219001D9973F2000E0119 /* ClientConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientConstants.swift; sourceTree = "<group>"; };
 		965219041D9993D7000E0119 /* UdacityConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConvenience.swift; sourceTree = "<group>"; };
+		96899AA91DA7E438003D1C3B /* UIViewController+KeyboardFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+KeyboardFunctions.swift"; sourceTree = "<group>"; };
+		96899AAB1DA7E5E2003D1C3B /* UIViewController+TextFieldDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+TextFieldDelegate.swift"; sourceTree = "<group>"; };
 		968A61971D8E081C00CD1545 /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		968A619A1D8E081C00CD1545 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		968A619C1D8E081C00CD1545 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -167,6 +171,8 @@
 		96AB3D001D949DA70097DF7A /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				96899AA91DA7E438003D1C3B /* UIViewController+KeyboardFunctions.swift */,
+				96899AAB1DA7E5E2003D1C3B /* UIViewController+TextFieldDelegate.swift */,
 				964531581D906BD300043C27 /* MapTabBarController.swift */,
 				968A619C1D8E081C00CD1545 /* LoginViewController.swift */,
 				968A61CE1D8E164B00CD1545 /* LocationsMapViewController.swift */,
@@ -371,9 +377,11 @@
 				965218FD1D9970E2000E0119 /* SuperClient.swift in Sources */,
 				964531591D906BD300043C27 /* MapTabBarController.swift in Sources */,
 				96F91D831D95BEBB00C7A27B /* StudentAnnotation.swift in Sources */,
+				96899AAC1DA7E5E2003D1C3B /* UIViewController+TextFieldDelegate.swift in Sources */,
 				968A61D31D8E187B00CD1545 /* LocationsTableViewController.swift in Sources */,
 				965219011D9973F2000E0119 /* ClientConstants.swift in Sources */,
 				96F91D771D949EAF00C7A27B /* ParseClient.swift in Sources */,
+				96899AAA1DA7E438003D1C3B /* UIViewController+KeyboardFunctions.swift in Sources */,
 				965219051D9993D7000E0119 /* UdacityConvenience.swift in Sources */,
 				968A61CF1D8E164B00CD1545 /* LocationsMapViewController.swift in Sources */,
 				96F91D7F1D95AC8200C7A27B /* GCDBlackBox.swift in Sources */,

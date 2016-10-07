@@ -32,10 +32,11 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hBL-zZ-EaI">
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GEf-GI-1vb">
                                         <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CKO-RG-yUl">
@@ -182,11 +183,11 @@
                             <constraint firstItem="6dJ-dP-BxR" firstAttribute="centerX" secondItem="AVl-gW-sBC" secondAttribute="centerX" id="9td-LB-FJH"/>
                             <constraint firstItem="LeZ-5X-0iI" firstAttribute="centerX" secondItem="AVl-gW-sBC" secondAttribute="centerX" id="DxK-2C-hyO"/>
                             <constraint firstItem="LeZ-5X-0iI" firstAttribute="top" secondItem="K1w-wc-wcM" secondAttribute="bottom" id="LaC-1G-EHA"/>
-                            <constraint firstItem="EuM-we-y1i" firstAttribute="top" secondItem="6dJ-dP-BxR" secondAttribute="bottom" constant="31" id="MSX-8B-hXq"/>
+                            <constraint firstItem="EuM-we-y1i" firstAttribute="top" secondItem="6dJ-dP-BxR" secondAttribute="bottom" constant="24" id="MSX-8B-hXq"/>
                             <constraint firstItem="6dJ-dP-BxR" firstAttribute="width" secondItem="AVl-gW-sBC" secondAttribute="width" multiplier="2/3" id="RFK-uF-sM6"/>
                             <constraint firstItem="LeZ-5X-0iI" firstAttribute="width" secondItem="AVl-gW-sBC" secondAttribute="width" id="a2S-ft-Gou"/>
                             <constraint firstItem="EuM-we-y1i" firstAttribute="trailing" secondItem="LeZ-5X-0iI" secondAttribute="trailing" id="p5S-qC-MTN"/>
-                            <constraint firstItem="6dJ-dP-BxR" firstAttribute="top" secondItem="K1w-wc-wcM" secondAttribute="bottom" constant="157" id="s0v-Er-nvd"/>
+                            <constraint firstItem="6dJ-dP-BxR" firstAttribute="top" secondItem="K1w-wc-wcM" secondAttribute="bottom" constant="44" id="s0v-Er-nvd"/>
                             <constraint firstItem="EuM-we-y1i" firstAttribute="bottom" secondItem="Me2-fJ-Dzy" secondAttribute="top" id="zFp-pB-YJx"/>
                         </constraints>
                     </view>
@@ -268,18 +269,18 @@
                                 <rect key="frame" x="0.0" y="92" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="P4O-Ew-aTY" id="1QS-rb-3CO">
-                                    <frame key="frameInset" width="414" height="43"/>
+                                    <frame key="frameInset" width="414" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TDc-ec-eUX">
-                                            <frame key="frameInset" minX="44" minY="4" width="34" height="21"/>
+                                            <frame key="frameInset" minX="44" minY="5" width="33.333333333333336" height="20.333333333333332"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9TU-dp-RAf">
-                                            <frame key="frameInset" minX="44" minY="25" width="33" height="15"/>
+                                            <frame key="frameInset" minX="44" minY="25.333333333333332" width="32.666666666666664" height="14.333333333333334"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>

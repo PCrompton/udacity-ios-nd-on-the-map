@@ -16,8 +16,13 @@ class LoginViewController: UIViewController {
     
     var mapTabBarController: MapTabBarController?
     
+    var viewDisplaced = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
         
 //        //Test Only
         emailTextField.text = "beethoven89.paul@gmail.com"
@@ -27,7 +32,7 @@ class LoginViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         
         //Test Only
-        loginButton()
+        //loginButton()
     }
     
     @IBAction func loginButton() {
@@ -45,5 +50,18 @@ class LoginViewController: UIViewController {
     @IBAction func signUpButton(_ sender: AnyObject) {
     }
 
+    // MARK: Keyboard Functions
+    override func keyboardWillShow(_ notification: Notification) {
+        if !viewDisplaced {
+            super.keyboardWillShow(notification)
+            viewDisplaced = true
+        }
+    }
+    
+    override func keyboardWillHide(_ notification: Notification) {
+        view.frame.origin.y += getKeyboardHeight(notification)
+        viewDisplaced = false
+    }
+    
 }
 

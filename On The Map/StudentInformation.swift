@@ -30,6 +30,7 @@ extension ParseClient {
             }
         }
         
+        // MARK: Init Methods
         init(jsonDict: [String:Any?]) {
             
             objectId = jsonDict[StudentKeys.objectId] as! String?
@@ -78,6 +79,7 @@ extension ParseClient {
             
         }
         
+        // MARK: Instance Methods
         func openMediaURL(sender: UIViewController) {
             if let url = mediaURL {
                 UIApplication.shared.open(url, options: [:])
@@ -90,31 +92,7 @@ extension ParseClient {
 
         }
 
-        public static func fetchStudents(completion: (() -> Void)?) {
-            StudentInformation.students.removeAll()
-            let parameters: [String: Any] = [ParameterKeys.Limit: ParameterValues.Limit, ParameterKeys.Order: ParameterValues.Order]
-            let url = client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: parameters)
-            let headers = [
-                HTTPHeaderKeys.ApiKey: Constants.ApiKey,
-                HTTPHeaderKeys.AppId: Constants.AppId
-            ]
-        
-            client.createAndRunTask(for: url, as: HTTPMethod.get, with: headers, with: nil) { (results, error) in
-                guard let results = results?["results"] as? [[String: Any]] else {
-                    fatalError("No key \"results\" found")
-                }
-                for result in results {
-                    let student = StudentInformation(jsonDict: result)
-                    if student.longitude != nil && student.latitude != nil {
-                        StudentInformation.students.append(student)
-                    }
-                }
-                completion?()
-            }
-        }
-        
         func post(completion: (() -> Void)?) {
-            
             let httpMethod: HTTPMethod
             let apiMethod: String
             if let objectId = objectId {
@@ -154,6 +132,30 @@ extension ParseClient {
             }
         }
         
+        // MARK: Class Methods
+        public static func fetchStudents(completion: (() -> Void)?) {
+            StudentInformation.students.removeAll()
+            let parameters: [String: Any] = [ParameterKeys.Limit: ParameterValues.Limit, ParameterKeys.Order: ParameterValues.Order]
+            let url = client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: parameters)
+            let headers = [
+                HTTPHeaderKeys.ApiKey: Constants.ApiKey,
+                HTTPHeaderKeys.AppId: Constants.AppId
+            ]
+            
+            client.createAndRunTask(for: url, as: HTTPMethod.get, with: headers, with: nil) { (results, error) in
+                guard let results = results?["results"] as? [[String: Any]] else {
+                    fatalError("No key \"results\" found")
+                }
+                for result in results {
+                    let student = StudentInformation(jsonDict: result)
+                    if student.longitude != nil && student.latitude != nil {
+                        StudentInformation.students.append(student)
+                    }
+                }
+                completion?()
+            }
+        }
+
         static func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?) -> Void)) {
             let method = Methods.StudentLocation
             let parameters = [ParameterKeys.Where: ParameterValues.Where(uniqueKey: uniqueKey)]

@@ -21,13 +21,21 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     
     var mapTabBarController: MapTabBarController?
     
+    var viewDisplaced = false
+    var displacement: CGFloat = 0.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mapStringTextField.delegate = self
+        mediaURLTextField.delegate = self
+        
         if let loginSession = UdacityClient.LoginSession.currentLoginSession {
             userName.text = "\(loginSession.user.firstName) \(loginSession.user.lastName)"
         }
-        mapStringTextField.text = "Lowell, MA"
-        mediaURLTextField.text = "http://cromptonmusic.com"
+        
+//        mapStringTextField.text = "Lowell, MA"
+//        mediaURLTextField.text = "http://cromptonmusic.com"
     }
 
     @IBAction func cancelButton(_ sender: AnyObject) {
@@ -121,6 +129,16 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         }
         
         return pinView
+    }
+    
+    // Mark: Keyboard Functions
+    
+    override func keyboardWillShow(_ notification: Notification) {
+
+    }
+    
+    override func keyboardWillHide(_ notification: Notification) {
+
     }
 
 }
