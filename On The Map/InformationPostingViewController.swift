@@ -20,10 +20,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var actionIndicator: UIActivityIndicatorView!
     
     var mapTabBarController: MapTabBarController?
-    
-    var viewDisplaced = false
-    var displacement: CGFloat = 0.0
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -133,12 +130,8 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     
     // Mark: Keyboard Functions
     
-    override func keyboardWillShow(_ notification: Notification) {
-
-    }
+    override func keyboardWillShow(_ notification: Notification) {}
     
-    override func keyboardWillHide(_ notification: Notification) {
-
-    }
+    override func keyboardWillHide(_ notification: Notification) {}
 
 }

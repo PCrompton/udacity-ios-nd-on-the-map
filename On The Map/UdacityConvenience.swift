@@ -19,7 +19,7 @@ extension UdacityClient {
                 return "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
             }
         }
-        func login(completion: (() -> Void)?) {
+        func login(completion: ((_ error: String?) -> Void)?) {
             let client = UdacityClient.sharedInstance()
             //let url = client.udacityClientURL(from: nil)
             let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.session)", with: nil)
@@ -33,6 +33,12 @@ extension UdacityClient {
                     guard let result = result else {
                         fatalError("No result found")
                     }
+                    
+                    if let error = result["error"] as? String {
+                        completion?(error)
+                        return
+                    }
+                    
                     guard let account = result["account"] as? [String: Any] else {
                         fatalError("Failed to retrieve account")
                     }
@@ -74,7 +80,7 @@ extension UdacityClient {
                                 fatalError("First name not found")
                             }
                             UdacityClient.LoginSession.currentLoginSession = LoginSession(id: sessionId, expiration: expiration, user: User(userId: userId, firstName: firstName, lastName: lastName))
-                            completion?()
+                            completion?(nil)
                         }
                     })
                 }

@@ -10,6 +10,7 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
+    @IBOutlet weak var invalidCredentials: UILabel!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -20,7 +21,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        invalidCredentials.isHidden = true
         emailTextField.delegate = self
         passwordTextField.delegate = self
         
@@ -32,18 +33,25 @@ class LoginViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         
         //Test Only
-        //loginButton()
+        loginButton()
     }
     
     @IBAction func loginButton() {
+        invalidCredentials.isHidden = true
         activityIndicator.startAnimating()
         guard let username = emailTextField.text, let password = passwordTextField.text else {
             return
         }
         
-        UdacityClient.HTTPBody(username: username, password: password).login() {
+        UdacityClient.HTTPBody(username: username, password: password).login() {(error) in
             self.activityIndicator.stopAnimating()
-            self.dismiss(animated: true, completion: nil)
+            if error != nil {
+                self.invalidCredentials.text = "Invalid Credentials"
+                self.invalidCredentials.isHidden = false
+            }
+            else {
+                self.dismiss(animated: true, completion: nil)
+            }
         }
     }
 
