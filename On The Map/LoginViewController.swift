@@ -43,7 +43,7 @@ class LoginViewController: UIViewController {
             return
         }
         
-        UdacityClient.HTTPBody(username: username, password: password).login() {(error) in
+        UdacityClient.login(with: username, password: password) {(error) in
             self.activityIndicator.stopAnimating()
             if let error = error {
                 self.presentNetworkError(title: "Error Logging In", error: error)
