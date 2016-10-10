@@ -33,21 +33,18 @@ class SuperClient: NSObject {
         return components.url!
     }
     
-    func createAndRunTask(for url: URL, as httpMethod: HTTPMethod?, with headers: [String: String]?, with body: String?, taskCompletion: @escaping (_ result: [String: Any]?, _ error: NSError?) -> Void) {
+    func createAndRunTask(for request: URLRequest, taskCompletion: @escaping (_ result: [String: Any]?, _ error: Error?) -> Void) {
         
-        let task = createTask(for: url, as: httpMethod, with: headers, with: body, taskCompletion: taskCompletion)
+        let task = createTask(for: request, taskCompletion: taskCompletion)
         task.resume()
     }
     
-    func createTask(for url: URL, as httpMethod: HTTPMethod?, with headers: [String:String]?, with body: String?, taskCompletion: @escaping (_ result: [String: Any]?, _ error: NSError?) -> Void) -> URLSessionDataTask {
-        print(body)
+    func createTask(for request: URLRequest, taskCompletion: @escaping (_ result: [String: Any]?, _ error: Error?) -> Void) -> URLSessionDataTask {
         let session = URLSession.shared
-        let request = createRequest(for: url, as: httpMethod, with: headers, with: body)
-        print(url)
-        print(request.httpBody?.hashValue)
         let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
             guard (error == nil) else {
-                fatalError("\(error)")
+                taskCompletion(nil, error)
+                return
             }
             
             guard let data = data else {

@@ -46,11 +46,6 @@
                                         </connections>
                                     </button>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0lr-mS-2Q5"/>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="characterWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rsC-zr-veS">
-                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="19"/>
-                                        <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2gk-Mv-oB7">
                                         <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                         <state key="normal" title="Don't have an account? Sign Up">
@@ -74,7 +69,6 @@
                     <connections>
                         <outlet property="activityIndicator" destination="0lr-mS-2Q5" id="Fgb-O2-VgW"/>
                         <outlet property="emailTextField" destination="hBL-zZ-EaI" id="f5B-Nu-hkf"/>
-                        <outlet property="invalidCredentials" destination="rsC-zr-veS" id="k0w-bc-nAz"/>
                         <outlet property="passwordTextField" destination="GEf-GI-1vb" id="KcZ-Qg-Xt1"/>
                     </connections>
                 </viewController>

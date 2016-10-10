@@ -10,7 +10,6 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
-    @IBOutlet weak var invalidCredentials: UILabel!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -21,13 +20,15 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        invalidCredentials.isHidden = true
         emailTextField.delegate = self
         passwordTextField.delegate = self
         
 //        //Test Only
-        emailTextField.text = "beethoven89.paul@gmail.com"
-        passwordTextField.text = "ew4QyBU#eWET6BOEnpqDroDMj9gkfsa&"
+//        emailTextField.text = "beethoven89.paul@gmail.com"
+//        passwordTextField.text = "ew4QyBU#eWET6BOEnpqDroDMj9gkfsa&"
+        
+        emailTextField.text = "john.doe89@gmail.com"
+        passwordTextField.text = "password"
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -37,7 +38,6 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButton() {
-        invalidCredentials.isHidden = true
         activityIndicator.startAnimating()
         guard let username = emailTextField.text, let password = passwordTextField.text else {
             return
@@ -45,9 +45,8 @@ class LoginViewController: UIViewController {
         
         UdacityClient.HTTPBody(username: username, password: password).login() {(error) in
             self.activityIndicator.stopAnimating()
-            if error != nil {
-                self.invalidCredentials.text = "Invalid Credentials"
-                self.invalidCredentials.isHidden = false
+            if let error = error {
+                self.presentNetworkError(title: "Error Logging In", error: error)
             }
             else {
                 self.dismiss(animated: true, completion: nil)

@@ -109,7 +109,8 @@ extension ParseClient {
                 HTTPHeaderKeys.AppId: Constants.AppId,
                 SuperClient.HTTPHeaderKeys.contentType: HTTPHeaderValues.json
             ]
-            StudentInformation.client.createAndRunTask(for: url, as: httpMethod, with: headers, with: body) { (results, error) in
+            let request = StudentInformation.client.createRequest(for: url, as: httpMethod, with: headers, with: body)
+            StudentInformation.client.createAndRunTask(for: request) { (results, error) in
                 performUpdatesOnMain {
                     guard let results = results else {
                         fatalError("No results returned")
@@ -141,8 +142,8 @@ extension ParseClient {
                 HTTPHeaderKeys.ApiKey: Constants.ApiKey,
                 HTTPHeaderKeys.AppId: Constants.AppId
             ]
-            
-            client.createAndRunTask(for: url, as: HTTPMethod.get, with: headers, with: nil) { (results, error) in
+            let request = client.createRequest(for: url, as: HTTPMethod.get, with: headers, with: nil)
+            client.createAndRunTask(for: request) { (results, error) in
                 guard let results = results?["results"] as? [[String: Any]] else {
                     fatalError("No key \"results\" found")
                 }
@@ -162,7 +163,8 @@ extension ParseClient {
             let url = URL(string: StudentInformation.client.getURL(for: Constants.urlComponents, with: method, with: parameters).absoluteString.replacingOccurrences(of: "%22:%22", with: "%22%3A%22"))!
             print(url.absoluteString)
             let httpHeaders = [HTTPHeaderKeys.ApiKey: Constants.ApiKey, HTTPHeaderKeys.AppId: Constants.AppId]
-            StudentInformation.client.createAndRunTask(for: url, as: HTTPMethod.get, with: httpHeaders, with: nil) { (results, error) in
+            let request = client.createRequest(for: url, as: HTTPMethod.get, with: httpHeaders, with: nil)
+            StudentInformation.client.createAndRunTask(for: request) { (results, error) in
                 performUpdatesOnMain {
                     guard error == nil else {
                         fatalError("No Results Found")
