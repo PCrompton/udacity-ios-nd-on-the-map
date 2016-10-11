@@ -92,7 +92,7 @@ extension ParseClient {
 
         }
 
-        func post(completion: (() -> Void)?) {
+        func post(completion: ((_ error: Error?) -> Void)?) {
             let httpMethod: HTTPMethod
             let apiMethod: String
             if let objectId = objectId {
@@ -113,22 +113,25 @@ extension ParseClient {
             StudentInformation.client.createAndRunTask(for: request) { (results, error) in
                 performUpdatesOnMain {
                     guard let results = results else {
-                        fatalError("No results returned")
+                        completion?(NSError(domain: "No results returned", code: 1, userInfo: nil))
+                        return
                     }
                     if httpMethod == HTTPMethod.post {
                         guard results["objectId"] as? String != nil else {
-                            fatalError("no \"objectId\" field found")
+                            completion?(NSError(domain: "no \"objectId\" field found", code: 1, userInfo: nil))
+                            return
                         }
                         guard results["createdAt"] as? String != nil else {
-                            fatalError("no \"createdAt\" field found")
+                            completion?(NSError(domain: "no \"createdAt\" field found", code: 1, userInfo: nil))
+                            return
                         }
                     } else if httpMethod == HTTPMethod.put {
                         guard results["updatedAt"] != nil else {
-                            fatalError("no \"updatedAt\" field found")
+                            completion?(NSError(domain: "no \"updatedAt\" field found", code: 1, userInfo: nil))
+                            return
                         }
                     }
-                    
-                    completion?()
+                    completion?(nil)
                 }
             }
         }
@@ -170,11 +173,20 @@ extension ParseClient {
                     guard error == nil else {
                         fatalError("No Results Found")
                     }
-                    if let objectId = (results?["results"] as? [[String: Any]])?[0]["objectId"] as? String {
-                        completion(objectId)
+                    guard let results = results?["results"] as? [[String: Any]] else {
+                        completion(nil)
+                        return
+                    }
+                    if results.count > 0 {
+                        if let objectId = results[0]["objectId"] as? String {
+                            completion(objectId)
+                        } else {
+                            completion(nil)
+                        }
                     } else {
                         completion(nil)
                     }
+
                 }
             }
         }

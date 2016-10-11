@@ -31,8 +31,8 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
             userName.text = "\(loginSession.user.firstName) \(loginSession.user.lastName)"
         }
         
-//        mapStringTextField.text = "Lowell, MA"
-//        mediaURLTextField.text = "http://cromptonmusic.com"
+        mapStringTextField.text = "Lowell, MA"
+        mediaURLTextField.text = "http://cromptonmusic.com"
     }
 
     @IBAction func cancelButton(_ sender: AnyObject) {
@@ -82,45 +82,52 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func submitButton(_ sender: AnyObject) {
         actionIndicator.startAnimating()
-        if coordinate == nil {
-            setLocation() {(error) in
-                performUpdatesOnMain {
-                    if let error = error {
-                        self.actionIndicator.stopAnimating()
-                        self.presentNetworkError(title: "Error Finding Location", error: error)
-                        return
-                    }
-                    guard let coordinate = self.coordinate else {
-                        self.actionIndicator.stopAnimating()
-                        fatalError("Unable to get coordinate")
-                    }
-                    if let loginSession = UdacityClient.LoginSession.currentLoginSession {
-                        
-                        let uniqueKey = loginSession.user.userId
-                        let firstName = loginSession.user.firstName
-                        let lastName = loginSession.user.lastName
-                        let mapString = self.mapStringTextField.text
-                        let mediaURL = URL(string: self.mediaURLTextField.text!)
-                        let latitude = coordinate.latitude
-                        let longitude = coordinate.longitude
-                        
-                        ParseClient.StudentInformation.get(by: uniqueKey, { (objectId) in
-                            performUpdatesOnMain {
-                                let student = ParseClient.StudentInformation.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
-                                
-                                student.post(completion: {
-                                    performUpdatesOnMain {
+        setLocation() {(error) in
+            performUpdatesOnMain {
+                if let error = error {
+                    self.actionIndicator.stopAnimating()
+                    self.presentNetworkError(title: "Error Finding Location", error: error)
+                    return
+                }
+                guard let coordinate = self.coordinate else {
+                    self.actionIndicator.stopAnimating()
+                    self.presentNetworkError(title: "Error Finding Coordinate", error: NSError(domain: "Unable to find coordinate", code: 1, userInfo: nil))
+                    return
+                }
+                if let loginSession = UdacityClient.LoginSession.currentLoginSession {
+                    
+                    let uniqueKey = loginSession.user.userId
+                    let firstName = loginSession.user.firstName
+                    let lastName = loginSession.user.lastName
+                    let mapString = self.mapStringTextField.text
+                    let mediaURL = URL(string: self.mediaURLTextField.text!)
+                    let latitude = coordinate.latitude
+                    let longitude = coordinate.longitude
+                    
+                    ParseClient.StudentInformation.get(by: uniqueKey, { (objectId) in
+                        performUpdatesOnMain {
+                            let student = ParseClient.StudentInformation.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
+                            
+                            student.post(completion: {(error) in
+                                performUpdatesOnMain {
+                                    self.actionIndicator.stopAnimating()
+                                    
+                                    if let error = error {
+                                        self.presentNetworkError(title: "Error Completing Request", error: error)
+                                    } else {
                                         self.mapTabBarController?.refreshButton(self)
-                                        self.actionIndicator.stopAnimating()
+                                        
                                         self.dismiss(animated: true, completion: nil)
                                     }
-                                })
-                            }
-                        })
-                        
-                    } else {
-                        fatalError("No login session found")
-                    }
+                                }
+                            })
+                        }
+                    })
+                    
+                } else {
+                    self.presentNetworkError(title: "No Login Session Found", error: NSError(domain: "Please login", code: 1, userInfo: nil))
+                    let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+                    self.present(loginVC, animated: true, completion: nil)
                 }
             }
         }
