@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class LocationsTableViewController: UITableViewController {
+class LocationsTableViewController: UITableViewController, MapTabBarControllerChild {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +18,12 @@ class LocationsTableViewController: UITableViewController {
 
     func loadStudents() {
         tableView.reloadData()
+    }
+    
+    func startActivityIndicator() {
+    }
+    
+    func stopActivityIndicator() {
     }
     // MARK: - Table view data source
 

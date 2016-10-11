@@ -34,7 +34,7 @@ class LoginViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         
         //Test Only
-        loginButton()
+        //loginButton()
     }
     
     @IBAction func loginButton() {
@@ -49,8 +49,10 @@ class LoginViewController: UIViewController {
                 self.presentNetworkError(title: "Error Logging In", error: error)
             }
             else {
+                self.mapTabBarController?.fetchStudentsAndUpdate()
                 self.dismiss(animated: true, completion: nil)
             }
+            
         }
     }
 

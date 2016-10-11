@@ -118,6 +118,16 @@
 			name = Udacity;
 			sourceTree = "<group>";
 		};
+		96899AAF1DAC493E003D1C3B /* UIViewController Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				96899AA91DA7E438003D1C3B /* UIViewController+KeyboardFunctions.swift */,
+				96899AAB1DA7E5E2003D1C3B /* UIViewController+TextFieldDelegate.swift */,
+				96899AAD1DAB34E6003D1C3B /* UIViewController+TaskError.swift */,
+			);
+			name = "UIViewController Extensions";
+			sourceTree = "<group>";
+		};
 		968A618E1D8E081C00CD1545 = {
 			isa = PBXGroup;
 			children = (
@@ -173,14 +183,12 @@
 		96AB3D001D949DA70097DF7A /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				96899AA91DA7E438003D1C3B /* UIViewController+KeyboardFunctions.swift */,
-				96899AAB1DA7E5E2003D1C3B /* UIViewController+TextFieldDelegate.swift */,
-				96899AAD1DAB34E6003D1C3B /* UIViewController+TaskError.swift */,
 				964531581D906BD300043C27 /* MapTabBarController.swift */,
 				968A619C1D8E081C00CD1545 /* LoginViewController.swift */,
 				968A61CE1D8E164B00CD1545 /* LocationsMapViewController.swift */,
 				968A61D21D8E187B00CD1545 /* LocationsTableViewController.swift */,
 				968A61CC1D8E0F8000CD1545 /* InformationPostingViewController.swift */,
+				96899AAF1DAC493E003D1C3B /* UIViewController Extensions */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";

@@ -8,7 +8,26 @@
 
 import UIKit
 
+protocol MapTabBarControllerChild {
+    func startActivityIndicator();
+    func stopActivityIndicator();
+    func loadStudents();
+    
+}
+
 class MapTabBarController: UITabBarController {
+    
+    var children: [MapTabBarControllerChild] {
+        get {
+            var children = [MapTabBarControllerChild]()
+            for child in childViewControllers {
+                if let child = child as? MapTabBarControllerChild {
+                    children.append(child)
+                }
+            }
+            return children
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,24 +35,32 @@ class MapTabBarController: UITabBarController {
         if UdacityClient.LoginSession.currentLoginSession == nil {
             presentLoginVC()
         }
-        ParseClient.StudentInformation.fetchStudents() {
-            self.updateChildren()
+        else {
+            fetchStudentsAndUpdate()
         }
      }
     
     func fetchStudentsAndUpdate() {
-        ParseClient.StudentInformation.fetchStudents{
-            self.updateChildren()
+        for child in children {
+            child.startActivityIndicator()
+        }
+        ParseClient.StudentInformation.fetchStudents() {(error) in
+            performUpdatesOnMain {
+                if let error = error {
+                    self.presentNetworkError(title: "Failed to Download", error: error)
+                } else {
+                    self.updateChildren()
+                }
+            }
+        }
+        for child in children {
+            child.stopActivityIndicator()
         }
     }
     
     func updateChildren() {
-        for child in childViewControllers {
-            if let child = child as? LocationsMapViewController {
-                child.loadStudents()
-            } else if let child = child as? LocationsTableViewController {
-                child.loadStudents()
-            }
+        for child in children {
+            child.loadStudents()
         }
     }
     
@@ -55,8 +82,6 @@ class MapTabBarController: UITabBarController {
     }
     
     @IBAction func refreshButton(_ sender: AnyObject) {
-        ParseClient.StudentInformation.fetchStudents { 
-            self.updateChildren()
-        }
+        fetchStudentsAndUpdate()
     }
 }

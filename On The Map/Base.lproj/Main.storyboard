@@ -93,10 +93,18 @@
                                     <outlet property="delegate" destination="3kp-J7-61O" id="Exw-gK-l7i"/>
                                 </connections>
                             </mapView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="4Xm-aS-D6e">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="2Ns-ty-Jyc"/>
+                                    <constraint firstAttribute="width" constant="40" id="F08-XH-zuu"/>
+                                </constraints>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="4Xm-aS-D6e" firstAttribute="centerX" secondItem="PQd-X7-nfJ" secondAttribute="centerX" id="8f6-Az-NZT"/>
                             <constraint firstItem="PQd-X7-nfJ" firstAttribute="centerY" secondItem="vgw-EZ-E2O" secondAttribute="centerY" constant="7.5" id="KcE-GE-KuJ"/>
+                            <constraint firstItem="4Xm-aS-D6e" firstAttribute="centerY" secondItem="PQd-X7-nfJ" secondAttribute="centerY" id="Nww-ZN-EKs"/>
                             <constraint firstItem="PQd-X7-nfJ" firstAttribute="leading" secondItem="vgw-EZ-E2O" secondAttribute="leading" id="Xd8-Zj-lLa"/>
                             <constraint firstItem="PQd-X7-nfJ" firstAttribute="top" secondItem="YlW-EE-hrn" secondAttribute="bottom" id="khZ-ad-27G"/>
                             <constraint firstItem="PQd-X7-nfJ" firstAttribute="centerX" secondItem="vgw-EZ-E2O" secondAttribute="centerX" id="v7Y-15-SaD"/>
@@ -104,6 +112,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="map" selectedImage="map" id="uhg-k6-Lda"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="4Xm-aS-D6e" id="p09-P6-bQw"/>
                         <outlet property="mapView" destination="PQd-X7-nfJ" id="IdP-S9-FQ2"/>
                     </connections>
                 </viewController>
@@ -137,7 +146,11 @@
                                 <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="barTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </toolbar>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="EuM-we-y1i"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="EuM-we-y1i">
+                                <connections>
+                                    <outlet property="delegate" destination="Wdk-wl-fUb" id="vt1-BS-fag"/>
+                                </connections>
+                            </mapView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="6dJ-dP-BxR">
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hJJ-pr-Ccv">

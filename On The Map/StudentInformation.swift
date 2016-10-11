@@ -134,7 +134,7 @@ extension ParseClient {
         }
         
         // MARK: Class Methods
-        public static func fetchStudents(completion: (() -> Void)?) {
+        public static func fetchStudents(completion: ((_ error: Error?) -> Void)?) {
             StudentInformation.students.removeAll()
             let parameters: [String: Any] = [ParameterKeys.Limit: ParameterValues.Limit, ParameterKeys.Order: ParameterValues.Order]
             let url = client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: parameters)
@@ -145,7 +145,8 @@ extension ParseClient {
             let request = client.createRequest(for: url, as: HTTPMethod.get, with: headers, with: nil)
             client.createAndRunTask(for: request) { (results, error) in
                 guard let results = results?["results"] as? [[String: Any]] else {
-                    fatalError("No key \"results\" found")
+                    completion?(NSError(domain: "No key \"results\" found", code: 1, userInfo: nil))
+                    return
                 }
                 for result in results {
                     let student = StudentInformation(jsonDict: result)
@@ -153,7 +154,7 @@ extension ParseClient {
                         StudentInformation.students.append(student)
                     }
                 }
-                completion?()
+                completion?(error)
             }
         }
 

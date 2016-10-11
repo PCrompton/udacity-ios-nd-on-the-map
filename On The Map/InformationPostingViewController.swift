@@ -40,11 +40,11 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     }
 
     @IBAction func findOnMapButton(_ sender: AnyObject) {
-        
+        mapView.removeAnnotations(mapView.annotations)
         setLocation() {
-            if self.coordinate != nil {
+            if let coordinate = self.coordinate {
                 let annotation = MKPointAnnotation()
-                self.coordinate = annotation.coordinate
+                annotation.coordinate = coordinate
                 self.mapView.addAnnotation(annotation)
             }
         }
@@ -56,17 +56,18 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         request.naturalLanguageQuery = self.mapStringTextField.text
         let search = MKLocalSearch(request: request)
         search.start { (response, error) in
-  
-            guard error == nil else {
-                fatalError("Could not complete search")
+            performUpdatesOnMain {
+                guard error == nil else {
+                    fatalError("Could not complete search")
+                }
+                guard let response = response else {
+                    fatalError("No response found")
+                }
+                if let location = response.mapItems.first {
+                    self.coordinate = location.placemark.coordinate
+                }
+                completion?()
             }
-            guard let response = response else {
-                fatalError("No response found")
-            }
-            if let location = response.mapItems.first {
-                self.coordinate = location.placemark.coordinate
-            }
-            completion?()
         }
     }
     

@@ -9,9 +9,10 @@
 import UIKit
 import MapKit
 
-class LocationsMapViewController: UIViewController, MKMapViewDelegate {
+class LocationsMapViewController: UIViewController, MKMapViewDelegate, MapTabBarControllerChild {
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +29,14 @@ class LocationsMapViewController: UIViewController, MKMapViewDelegate {
         }
         
         mapView.addAnnotations(annotations)
+    }
+    
+    func startActivityIndicator() {
+        activityIndicator.startAnimating()
+    }
+    
+    func stopActivityIndicator() {
+        activityIndicator.stopAnimating()
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
