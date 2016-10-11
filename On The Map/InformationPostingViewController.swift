@@ -41,16 +41,23 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
 
     @IBAction func findOnMapButton(_ sender: AnyObject) {
         mapView.removeAnnotations(mapView.annotations)
-        setLocation() {
-            if let coordinate = self.coordinate {
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = coordinate
-                self.mapView.addAnnotation(annotation)
+        setLocation() {(error) in
+            performUpdatesOnMain {
+                if let error = error {
+                    self.presentNetworkError(title: "Error Finding Location", error: error)
+                    return
+                }
+                if let coordinate = self.coordinate {
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = coordinate
+                    self.mapView.addAnnotation(annotation)
+                }
             }
+
         }
     }
 
-    func setLocation(completion: (() -> Void)?) {
+    func setLocation(completion: ((_ error: Error?) -> Void)?) {
        
         let request = MKLocalSearchRequest()
         request.naturalLanguageQuery = self.mapStringTextField.text
@@ -58,15 +65,17 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         search.start { (response, error) in
             performUpdatesOnMain {
                 guard error == nil else {
-                    fatalError("Could not complete search")
+                    completion?(error)
+                    return
                 }
                 guard let response = response else {
-                    fatalError("No response found")
+                    completion?(NSError(domain: "No response found", code: 1, userInfo: nil))
+                    return
                 }
                 if let location = response.mapItems.first {
                     self.coordinate = location.placemark.coordinate
                 }
-                completion?()
+                completion?(nil)
             }
         }
     }
@@ -74,9 +83,15 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     @IBAction func submitButton(_ sender: AnyObject) {
         actionIndicator.startAnimating()
         if coordinate == nil {
-            setLocation() {
+            setLocation() {(error) in
                 performUpdatesOnMain {
+                    if let error = error {
+                        self.actionIndicator.stopAnimating()
+                        self.presentNetworkError(title: "Error Finding Location", error: error)
+                        return
+                    }
                     guard let coordinate = self.coordinate else {
+                        self.actionIndicator.stopAnimating()
                         fatalError("Unable to get coordinate")
                     }
                     if let loginSession = UdacityClient.LoginSession.currentLoginSession {
