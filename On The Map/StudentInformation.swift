@@ -20,13 +20,34 @@ extension ParseClient {
         let firstName: String
         let lastName: String
         let mapString: String?
-        let mediaURL: URL?
+        let mediaURLString: String?
         let latitude: Double?
         let longitude: Double?
         
+        var mediaURL: URL? {
+            get {
+                if let mediaURLString = mediaURLString {
+                    let mediaURLComponents = URLComponents(string: mediaURLString)
+                    if var mediaURLComponents = mediaURLComponents {
+                        if mediaURLComponents.scheme != nil {
+                            if let url = mediaURLComponents.url {
+                                return url
+                            } 
+                        } else {
+                            mediaURLComponents.scheme = "http"
+                            if let url = mediaURLComponents.url {
+                                return url
+                            }
+                        }
+                    }
+                }
+                return nil
+            }
+        }
+        
         var body: String {
             get {
-                return "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString!)\", \"mediaURL\": \"\(mediaURL!.absoluteString)\", \"latitude\": \(latitude!), \"longitude\": \(longitude!)}"
+                return "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString!)\", \"mediaURL\": \"\(mediaURLString!)\", \"latitude\": \(latitude!), \"longitude\": \(longitude!)}"
             }
         }
         
@@ -43,9 +64,9 @@ extension ParseClient {
                 mapString = nil
             }
             if let result = jsonDict[StudentKeys.mediaURL] as? String {
-                mediaURL = URL(string: result)
+                mediaURLString = result
             } else {
-                mediaURL = nil
+                mediaURLString = nil
             }
             if let result = jsonDict[StudentKeys.latitude] as? Double {
                 latitude = result
@@ -64,7 +85,7 @@ extension ParseClient {
              firstName: String,
              lastName: String,
              mapString: String?,
-             mediaURL: URL?,
+             mediaURL: String?,
              latitude: Double?,
              longitude: Double?
             ) {
@@ -73,7 +94,7 @@ extension ParseClient {
             self.firstName = firstName
             self.lastName = lastName
             self.mapString = mapString
-            self.mediaURL = mediaURL
+            self.mediaURLString = mediaURL
             self.latitude = latitude
             self.longitude = longitude
             
@@ -161,7 +182,7 @@ extension ParseClient {
             }
         }
 
-        static func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?) -> Void)) {
+        static func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?, _ error: Error?) -> Void)) {
             let method = Methods.StudentLocation
             let parameters = [ParameterKeys.Where: ParameterValues.Where(uniqueKey: uniqueKey)]
             let url = URL(string: StudentInformation.client.getURL(for: Constants.urlComponents, with: method, with: parameters).absoluteString.replacingOccurrences(of: "%22:%22", with: "%22%3A%22"))!
@@ -171,20 +192,21 @@ extension ParseClient {
             StudentInformation.client.createAndRunTask(for: request) { (results, error) in
                 performUpdatesOnMain {
                     guard error == nil else {
-                        fatalError("No Results Found")
+                        completion(nil, NSError(domain: "Error Getting Student Information", code: 1, userInfo: nil))
+                        return
                     }
                     guard let results = results?["results"] as? [[String: Any]] else {
-                        completion(nil)
+                        completion(nil, NSError(domain: "Unable to retrieve results", code: 1, userInfo: nil))
                         return
                     }
                     if results.count > 0 {
                         if let objectId = results[0]["objectId"] as? String {
-                            completion(objectId)
+                            completion(objectId, nil)
                         } else {
-                            completion(nil)
+                            completion(nil, NSError(domain: "Unable to get ObjectId", code: 1, userInfo: nil))
                         }
                     } else {
-                        completion(nil)
+                        completion(nil, NSError(domain: "Unable to get Student Information", code: 1, userInfo: nil))
                     }
 
                 }

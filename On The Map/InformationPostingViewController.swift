@@ -32,7 +32,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         }
         
         mapStringTextField.text = "Lowell, MA"
-        mediaURLTextField.text = "http://cromptonmusic.com"
+        mediaURLTextField.text = "google.com"
     }
 
     @IBAction func cancelButton(_ sender: AnyObject) {
@@ -58,7 +58,8 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     }
 
     func setLocation(completion: ((_ error: Error?) -> Void)?) {
-       
+        mapStringTextField.resignFirstResponder()
+        mediaURLTextField.resignFirstResponder()
         let request = MKLocalSearchRequest()
         request.naturalLanguageQuery = self.mapStringTextField.text
         let search = MKLocalSearch(request: request)
@@ -74,6 +75,11 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                 }
                 if let location = response.mapItems.first {
                     self.coordinate = location.placemark.coordinate
+                    let origin = CLLocationCoordinate2D(latitude: self.coordinate!.latitude + 2.5, longitude: self.coordinate!.longitude - 3.5)
+                    let mapPoint = MKMapPointForCoordinate(origin)
+                    let mapSize = MKMapSizeMake(5000000.0, 5000000.0)
+                    let mapRect = MKMapRect(origin: mapPoint, size: mapSize)
+                    self.mapView.setVisibleMapRect(mapRect, animated: true)
                 }
                 completion?(nil)
             }
@@ -100,12 +106,16 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                     let firstName = loginSession.user.firstName
                     let lastName = loginSession.user.lastName
                     let mapString = self.mapStringTextField.text
-                    let mediaURL = URL(string: self.mediaURLTextField.text!)
+                    let mediaURL = self.mediaURLTextField.text
                     let latitude = coordinate.latitude
                     let longitude = coordinate.longitude
                     
-                    ParseClient.StudentInformation.get(by: uniqueKey, { (objectId) in
+                    ParseClient.StudentInformation.get(by: uniqueKey, { (objectId, error) in
                         performUpdatesOnMain {
+                            if let error = error {
+                                self.presentNetworkError(title: "Failed to Post Student Information", error: error)
+                                return
+                            }
                             let student = ParseClient.StudentInformation.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
                             
                             student.post(completion: {(error) in

@@ -38,8 +38,8 @@ class LocationsTableViewController: UITableViewController, MapTabBarControllerCh
         
         cell.textLabel?.text = "\(student.firstName) \(student.lastName)"
         
-        if let mapString = student.mapString {
-            cell.detailTextLabel?.text = mapString
+        if let mediaURLString = student.mediaURLString {
+            cell.detailTextLabel?.text = mediaURLString
         } else {
             cell.detailTextLabel?.text = ""
         }
