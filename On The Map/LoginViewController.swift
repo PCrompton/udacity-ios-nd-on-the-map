@@ -57,6 +57,8 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction func signUpButton(_ sender: AnyObject) {
+        let url = URL(string: "https://auth.udacity.com/sign-up?next=https%3A%2F%2Fclassroom.udacity.com%2Fauthenticated&_ga=1.124035849.286073158.1467132567")!
+        UIApplication.shared.open(url, options: [:])
     }
 
     // MARK: Keyboard Functions
