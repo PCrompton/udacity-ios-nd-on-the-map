@@ -22,19 +22,6 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         emailTextField.delegate = self
         passwordTextField.delegate = self
-        
-//        //Test Only
-//        emailTextField.text = "beethoven89.paul@gmail.com"
-//        passwordTextField.text = "ew4QyBU#eWET6BOEnpqDroDMj9gkfsa&"
-        
-        emailTextField.text = "john.doe89@gmail.com"
-        passwordTextField.text = "password"
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        
-        //Test Only
-        //loginButton()
     }
     
     @IBAction func loginButton() {

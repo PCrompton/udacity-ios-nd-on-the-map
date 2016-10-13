@@ -30,9 +30,6 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         if let loginSession = UdacityClient.LoginSession.currentLoginSession {
             userName.text = "\(loginSession.user.firstName) \(loginSession.user.lastName)"
         }
-        
-        mapStringTextField.text = "Lowell, MA"
-        mediaURLTextField.text = "google.com"
     }
 
     @IBAction func cancelButton(_ sender: AnyObject) {
@@ -162,9 +159,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     }
     
     // Mark: Keyboard Functions
-    
     override func keyboardWillShow(_ notification: Notification) {}
-    
     override func keyboardWillHide(_ notification: Notification) {}
 
 }
