@@ -10,12 +10,8 @@ import Foundation
 
 class SuperClient: NSObject {
     // MARK: Properties
-    var session = URLSession.shared
-    //var config = ParseConfig()
     
-    override init() {
-        super.init()
-    }
+    var session = URLSession.shared
     
     func getURL(for urlComponents: URLComponents, with path: String?, with parameters: [String: Any]?) -> URL {
         
@@ -35,11 +31,6 @@ class SuperClient: NSObject {
     
     func createAndRunTask(for request: URLRequest, taskCompletion: @escaping (_ result: [String: Any]?, _ error: Error?) -> Void) {
         
-        let task = createTask(for: request, taskCompletion: taskCompletion)
-        task.resume()
-    }
-    
-    func createTask(for request: URLRequest, taskCompletion: @escaping (_ result: [String: Any]?, _ error: Error?) -> Void) -> URLSessionDataTask {
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
             guard (error == nil) else {
@@ -53,8 +44,8 @@ class SuperClient: NSObject {
             
             self.convertDataWithCompletionHandler(data: data, completionHandlerForConvertData: taskCompletion)
         })
-        
-        return task
+
+        task.resume()
     }
     
     func createRequest(for url: URL, as type: HTTPMethod?, with headers: [String: String]?, with body: String?) -> URLRequest {

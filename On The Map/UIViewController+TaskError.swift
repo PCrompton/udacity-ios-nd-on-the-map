@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 extension UIViewController {
-    func presentNetworkError(title: String, error: Error) {
-        let alertController = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: UIAlertControllerStyle.alert)
+    func presentError(title: String, errorMessage: String) {
+        let alertController = UIAlertController(title: title, message: errorMessage, preferredStyle: UIAlertControllerStyle.alert)
         let alertAction = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil)
         alertController.addAction(alertAction)
         self.present(alertController, animated: true, completion: nil)

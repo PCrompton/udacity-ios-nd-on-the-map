@@ -18,6 +18,6 @@ class StudentAnnotation: MKPointAnnotation {
         let long = CLLocationDegrees(student.longitude!)
         self.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         self.title = "\(student.firstName) \(student.lastName)"
-        self.subtitle = student.mediaURL?.absoluteString
+        self.subtitle = student.mediaURLString
     }
 }

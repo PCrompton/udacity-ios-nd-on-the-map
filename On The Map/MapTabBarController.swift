@@ -47,7 +47,7 @@ class MapTabBarController: UITabBarController {
         ParseClient.StudentInformation.fetchStudents() {(error) in
             performUpdatesOnMain {
                 if let error = error {
-                    self.presentNetworkError(title: "Failed to Download", error: error)
+                    self.presentError(title: "Failed to Download", errorMessage: error.debugDescription)
                 } else {
                     self.updateChildren()
                 }

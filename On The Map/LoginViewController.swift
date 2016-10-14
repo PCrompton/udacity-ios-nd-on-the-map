@@ -25,15 +25,26 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginButton() {
-        activityIndicator.startAnimating()
+        
+        emailTextField.resignFirstResponder()
+        passwordTextField.resignFirstResponder()
+        
         guard let username = emailTextField.text, let password = passwordTextField.text else {
             return
         }
-        
-        UdacityClient.login(with: username, password: password) {(error) in
+        guard username != "" else {
+            presentError(title: "No Email Entered", errorMessage: "Please enter a valid email addres in the Email field")
+            return
+        }
+        guard password != "" else {
+            presentError(title: "No Password Entered", errorMessage: "Please enter a valid password in the password field")
+            return
+        }
+        activityIndicator.startAnimating()
+        UdacityClient.login(with: username, password: password) {(errorMessage) in
             self.activityIndicator.stopAnimating()
-            if let error = error {
-                self.presentNetworkError(title: "Error Logging In", error: error)
+            if let errorMessage = errorMessage {
+                self.presentError(title: "Error Logging In", errorMessage: errorMessage)
             }
             else {
                 self.mapTabBarController?.fetchStudentsAndUpdate()

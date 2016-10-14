@@ -41,7 +41,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         setLocation() {(error) in
             performUpdatesOnMain {
                 if let error = error {
-                    self.presentNetworkError(title: "Error Finding Location", error: error)
+                    self.presentError(title: "Error Finding Location", errorMessage: error.debugDescription)
                     return
                 }
                 if let coordinate = self.coordinate {
@@ -54,7 +54,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         }
     }
 
-    func setLocation(completion: ((_ error: Error?) -> Void)?) {
+    func setLocation(completion: ((_ errorMessage: String?) -> Void)?) {
         mapStringTextField.resignFirstResponder()
         mediaURLTextField.resignFirstResponder()
         let request = MKLocalSearchRequest()
@@ -63,11 +63,11 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         search.start { (response, error) in
             performUpdatesOnMain {
                 guard error == nil else {
-                    completion?(error)
+                    completion?(error.debugDescription)
                     return
                 }
                 guard let response = response else {
-                    completion?(NSError(domain: "No response found", code: 1, userInfo: nil))
+                    completion?("No response found")
                     return
                 }
                 if let location = response.mapItems.first {
@@ -85,16 +85,16 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func submitButton(_ sender: AnyObject) {
         actionIndicator.startAnimating()
-        setLocation() {(error) in
+        setLocation() {(errorMessage) in
             performUpdatesOnMain {
-                if let error = error {
+                if let errorMessage = errorMessage {
                     self.actionIndicator.stopAnimating()
-                    self.presentNetworkError(title: "Error Finding Location", error: error)
+                    self.presentError(title: "Error Finding Location", errorMessage: errorMessage)
                     return
                 }
                 guard let coordinate = self.coordinate else {
                     self.actionIndicator.stopAnimating()
-                    self.presentNetworkError(title: "Error Finding Coordinate", error: NSError(domain: "Unable to find coordinate", code: 1, userInfo: nil))
+                    self.presentError(title: "Error Finding Coordinate", errorMessage: "Unable to find coordinate")
                     return
                 }
                 if let loginSession = UdacityClient.LoginSession.currentLoginSession {
@@ -107,32 +107,32 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                     let latitude = coordinate.latitude
                     let longitude = coordinate.longitude
                     
-                    ParseClient.StudentInformation.get(by: uniqueKey, { (objectId, error) in
+                    ParseClient.StudentInformation.get(by: uniqueKey) { (objectId, error) in
                         performUpdatesOnMain {
                             if let error = error {
-                                self.presentNetworkError(title: "Failed to Post Student Information", error: error)
+                                self.presentError(title: "Failed to Post Student Information", errorMessage: error.debugDescription)
                                 return
                             }
                             let student = ParseClient.StudentInformation.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
                             
-                            student.post(completion: {(error) in
+                            student.post() {(error) in
                                 performUpdatesOnMain {
                                     self.actionIndicator.stopAnimating()
                                     
                                     if let error = error {
-                                        self.presentNetworkError(title: "Error Completing Request", error: error)
+                                        self.presentError(title: "Error Completing Request", errorMessage: error.debugDescription)
                                     } else {
                                         self.mapTabBarController?.refreshButton(self)
                                         
                                         self.dismiss(animated: true, completion: nil)
                                     }
                                 }
-                            })
+                            }
                         }
-                    })
+                    }
                     
                 } else {
-                    self.presentNetworkError(title: "No Login Session Found", error: NSError(domain: "Please login", code: 1, userInfo: nil))
+                    self.presentError(title: "No Login Session Found", errorMessage: "Please login")
                     let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
                     self.present(loginVC, animated: true, completion: nil)
                 }

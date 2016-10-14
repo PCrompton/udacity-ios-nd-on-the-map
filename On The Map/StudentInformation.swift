@@ -113,7 +113,7 @@ extension ParseClient {
 
         }
 
-        func post(completion: ((_ error: Error?) -> Void)?) {
+        func post(completion: ((_ error: NSError?) -> Void)?) {
             let httpMethod: HTTPMethod
             let apiMethod: String
             if let objectId = objectId {
@@ -157,32 +157,7 @@ extension ParseClient {
             }
         }
         
-        // MARK: Class Methods
-        public static func fetchStudents(completion: ((_ error: Error?) -> Void)?) {
-            StudentInformation.students.removeAll()
-            let parameters: [String: Any] = [ParameterKeys.Limit: ParameterValues.Limit, ParameterKeys.Order: ParameterValues.Order]
-            let url = client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: parameters)
-            let headers = [
-                HTTPHeaderKeys.ApiKey: Constants.ApiKey,
-                HTTPHeaderKeys.AppId: Constants.AppId
-            ]
-            let request = client.createRequest(for: url, as: HTTPMethod.get, with: headers, with: nil)
-            client.createAndRunTask(for: request) { (results, error) in
-                guard let results = results?["results"] as? [[String: Any]] else {
-                    completion?(NSError(domain: "No key \"results\" found", code: 1, userInfo: nil))
-                    return
-                }
-                for result in results {
-                    let student = StudentInformation(jsonDict: result)
-                    if student.longitude != nil && student.latitude != nil {
-                        StudentInformation.students.append(student)
-                    }
-                }
-                completion?(error)
-            }
-        }
-
-        static func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?, _ error: Error?) -> Void)) {
+        static func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?, _ error: NSError?) -> Void)) {
             let method = Methods.StudentLocation
             let parameters = [ParameterKeys.Where: ParameterValues.Where(uniqueKey: uniqueKey)]
             let url = URL(string: StudentInformation.client.getURL(for: Constants.urlComponents, with: method, with: parameters).absoluteString.replacingOccurrences(of: "%22:%22", with: "%22%3A%22"))!
@@ -208,11 +183,40 @@ extension ParseClient {
                     } else {
                         completion(nil, NSError(domain: "Unable to get Student Information", code: 1, userInfo: nil))
                     }
-
+                    
                 }
             }
         }
         
+        // MARK: Class Methods
+        public static func fetchStudents(completion: ((_ errorMessage: String?) -> Void)?) {
+            StudentInformation.students.removeAll()
+            let parameters: [String: Any] = [ParameterKeys.Limit: ParameterValues.Limit, ParameterKeys.Order: ParameterValues.Order]
+            let url = client.getURL(for: Constants.urlComponents, with: Methods.StudentLocation, with: parameters)
+            let headers = [
+                HTTPHeaderKeys.ApiKey: Constants.ApiKey,
+                HTTPHeaderKeys.AppId: Constants.AppId
+            ]
+            let request = client.createRequest(for: url, as: HTTPMethod.get, with: headers, with: nil)
+            client.createAndRunTask(for: request) { (results, error) in
+                if let error = error {
+                    completion?(error.localizedDescription)
+                    return
+                }
+                guard let results = results?["results"] as? [[String: Any]] else {
+                    completion?("No key \"results\" found")
+                    return
+                }
+                for result in results {
+                    let student = StudentInformation(jsonDict: result)
+                    if student.longitude != nil && student.latitude != nil {
+                        StudentInformation.students.append(student)
+                    }
+                }
+                completion?(nil)
+            }
+        }
+
         struct StudentKeys {
             static let objectId = "objectId"
             static let uniqueKey = "uniqueKey"

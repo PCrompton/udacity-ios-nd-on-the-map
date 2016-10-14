@@ -18,7 +18,7 @@ class UdacityClient: SuperClient {
         return Singleton.sharedInstance
     }
     
-    class func login(with username: String, password: String, completion: ((_ error: Error?) -> Void)?) {
+    class func login(with username: String, password: String, completion: ((_ errorMessage: String?) -> Void)?) {
         let client = UdacityClient.sharedInstance()
         let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.session)", with: nil)
         let httpHeaders = [HTTPHeaderKeys.accept: HTTPHeaderValues.json, HTTPHeaderKeys.contentType: HTTPHeaderValues.json]
@@ -28,45 +28,45 @@ class UdacityClient: SuperClient {
             
             performUpdatesOnMain {
                 guard error == nil else {
-                    completion?(error)
+                    completion?(error!.localizedDescription)
                     return
                 }
                 guard let result = result else {
-                    completion?(error)
+                    completion?(error!.localizedDescription)
                     return
                 }
                 
                 if let serverError = result["error"] as? String {
-                    completion?(NSError(domain: serverError, code: 0))
+                    completion?(serverError)
                     return
                 }
                 
                 guard let account = result["account"] as? [String: Any] else {
-                    completion?(NSError(domain: "Failed to retrieve account", code: 1))
+                    completion?("Failed to retrieve account")
                     return
                 }
                 guard let registered = account["registered"] as? Bool else {
-                    completion?(NSError(domain: "Failed to retrieve registered status", code: 1))
+                    completion?("Failed to retrieve registered status")
                     return
                 }
                 guard registered == true else {
-                    completion?(NSError(domain: "User not registered", code: 1))
+                    completion?("User not registered")
                     return
                 }
                 guard let userId = account["key"] as? String else {
-                    completion?(NSError(domain: "Failed to retrieve key", code: 1))
+                    completion?("Failed to retrieve key")
                     return
                 }
                 guard let session = result["session"] as? [String: Any] else {
-                    completion?(NSError(domain: "Failed to retrieve session", code: 1))
+                    completion?("Failed to retrieve session")
                     return
                 }
                 guard let sessionId = session["id"] as? String else {
-                    completion?(NSError(domain: "Failed to retrieve \"id\" in session", code: 1))
+                    completion?("Failed to retrieve \"id\" in session")
                     return
                 }
                 guard let expiration = session["expiration"] as? String else {
-                    completion?(NSError(domain: "Failed to retrieve 'expiration' in session", code: 1))
+                    completion?("Failed to retrieve 'expiration' in session")
                     return
                 }
                 
@@ -75,23 +75,23 @@ class UdacityClient: SuperClient {
                 client.createAndRunTask(for: request, taskCompletion: { (result, error) in
                     performUpdatesOnMain {
                         guard error == nil else {
-                            completion?(error)
+                            completion?(error!.localizedDescription)
                             return
                         }
                         guard let result = result else {
-                            completion?(NSError(domain: "Result not found", code: 1))
+                            completion?("Result not found")
                             return
                         }
                         guard let user = result["user"] as? [String: Any] else {
-                            completion?(NSError(domain: "User not found", code: 1))
+                            completion?("User not found")
                             return
                         }
                         guard let lastName = user["last_name"] as? String else {
-                            completion?(NSError(domain: "Last name not found", code: 1))
+                            completion?("Last name not found")
                             return
                         }
                         guard let firstName = user["first_name"] as? String else {
-                            completion?(NSError(domain: "First name not found", code: 1))
+                            completion?("First name not found")
                             return
                         }
                         UdacityClient.LoginSession.currentLoginSession = LoginSession(id: sessionId, expiration: expiration, user: User(userId: userId, firstName: firstName, lastName: lastName))
