@@ -43,7 +43,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
             performUpdatesOnMain {
                 self.actionIndicator.stopAnimating()
                 if let error = error {
-                    self.presentError(title: "Error Finding Location", errorMessage: error.debugDescription)
+                    self.presentError(title: "Error Finding Location", errorMessage: error)
                     return
                 }
                 if let coordinate = self.coordinate {
@@ -64,8 +64,8 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
         let search = MKLocalSearch(request: request)
         search.start { (response, error) in
             performUpdatesOnMain {
-                guard error == nil else {
-                    completion?(error.debugDescription)
+                if let error = error {
+                    completion?(error.localizedDescription)
                     return
                 }
                 guard let response = response else {
@@ -109,20 +109,20 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                     let latitude = coordinate.latitude
                     let longitude = coordinate.longitude
                     
-                    ParseClient.StudentInformation.get(by: uniqueKey) { (objectId, error) in
+                    ParseClient.StudentInformation.get(by: uniqueKey) { (objectId, errorMessage) in
                         performUpdatesOnMain {
-                            if let error = error {
-                                self.presentError(title: "Failed to Post Student Information", errorMessage: error.debugDescription)
+                            if let errorMessage = errorMessage {
+                                self.presentError(title: "Failed to Post Student Information", errorMessage: errorMessage)
                                 return
                             }
                             let student = ParseClient.StudentInformation.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
                             
-                            student.post() {(error) in
+                            student.post() {(errorMessage) in
                                 performUpdatesOnMain {
                                     self.actionIndicator.stopAnimating()
                                     
-                                    if let error = error {
-                                        self.presentError(title: "Error Completing Request", errorMessage: error.debugDescription)
+                                    if let errorMessage = errorMessage {
+                                        self.presentError(title: "Error Completing Request", errorMessage: errorMessage)
                                     } else {
                                         self.mapTabBarController?.refreshButton(self)
                                         

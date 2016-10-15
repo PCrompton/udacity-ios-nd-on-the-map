@@ -9,8 +9,8 @@
 import Foundation
 
 class SuperClient: NSObject {
-    // MARK: Properties
     
+    // MARK: Properties
     var session = URLSession.shared
     
     func getURL(for urlComponents: URLComponents, with path: String?, with parameters: [String: Any]?) -> URL {
@@ -32,18 +32,21 @@ class SuperClient: NSObject {
     func createAndRunTask(for request: URLRequest, taskCompletion: @escaping (_ result: [String: Any]?, _ error: Error?) -> Void) {
         
         let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
-            guard (error == nil) else {
-                taskCompletion(nil, error)
-                return
+        let task = session.dataTask(with: request) { (data, response, error) in
+            performUpdatesOnMain {
+                guard (error == nil) else {
+                    taskCompletion(nil, error)
+                    return
+                }
+                
+                guard let data = data else {
+                    taskCompletion(nil, error)
+                    return
+                }
+                
+                self.convertDataWithCompletionHandler(data: data, completionHandlerForConvertData: taskCompletion)
             }
-            
-            guard let data = data else {
-                fatalError("No data found")
-            }
-            
-            self.convertDataWithCompletionHandler(data: data, completionHandlerForConvertData: taskCompletion)
-        })
+        }
 
         task.resume()
     }

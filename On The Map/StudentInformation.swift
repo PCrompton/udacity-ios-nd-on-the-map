@@ -113,7 +113,7 @@ extension ParseClient {
 
         }
 
-        func post(completion: ((_ error: NSError?) -> Void)?) {
+        func post(completion: ((_ errorMessage: String?) -> Void)?) {
             let httpMethod: HTTPMethod
             let apiMethod: String
             if let objectId = objectId {
@@ -134,21 +134,21 @@ extension ParseClient {
             StudentInformation.client.createAndRunTask(for: request) { (results, error) in
                 performUpdatesOnMain {
                     guard let results = results else {
-                        completion?(NSError(domain: "No results returned", code: 1, userInfo: nil))
+                        completion?("No results returned")
                         return
                     }
                     if httpMethod == HTTPMethod.post {
                         guard results["objectId"] as? String != nil else {
-                            completion?(NSError(domain: "no \"objectId\" field found", code: 1, userInfo: nil))
+                            completion?("no \"objectId\" field found")
                             return
                         }
                         guard results["createdAt"] as? String != nil else {
-                            completion?(NSError(domain: "no \"createdAt\" field found", code: 1, userInfo: nil))
+                            completion?("no \"createdAt\" field found")
                             return
                         }
                     } else if httpMethod == HTTPMethod.put {
                         guard results["updatedAt"] != nil else {
-                            completion?(NSError(domain: "no \"updatedAt\" field found", code: 1, userInfo: nil))
+                            completion?("no \"updatedAt\" field found")
                             return
                         }
                     }
@@ -157,7 +157,7 @@ extension ParseClient {
             }
         }
         
-        static func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?, _ error: NSError?) -> Void)) {
+        static func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?, _ errorMessage: String?) -> Void)) {
             let method = Methods.StudentLocation
             let parameters = [ParameterKeys.Where: ParameterValues.Where(uniqueKey: uniqueKey)]
             let url = URL(string: StudentInformation.client.getURL(for: Constants.urlComponents, with: method, with: parameters).absoluteString.replacingOccurrences(of: "%22:%22", with: "%22%3A%22"))!
@@ -167,21 +167,21 @@ extension ParseClient {
             StudentInformation.client.createAndRunTask(for: request) { (results, error) in
                 performUpdatesOnMain {
                     guard error == nil else {
-                        completion(nil, NSError(domain: "Error Getting Student Information", code: 1, userInfo: nil))
+                        completion(nil, "Error Getting Student Information")
                         return
                     }
                     guard let results = results?["results"] as? [[String: Any]] else {
-                        completion(nil, NSError(domain: "Unable to retrieve results", code: 1, userInfo: nil))
+                        completion(nil, "Unable to retrieve results")
                         return
                     }
                     if results.count > 0 {
                         if let objectId = results[0]["objectId"] as? String {
                             completion(objectId, nil)
                         } else {
-                            completion(nil, NSError(domain: "Unable to get ObjectId", code: 1, userInfo: nil))
+                            completion(nil, "Unable to get ObjectId")
                         }
                     } else {
-                        completion(nil, NSError(domain: "Unable to get Student Information", code: 1, userInfo: nil))
+                        completion(nil, "Unable to get Student Information")
                     }
                     
                 }
