@@ -87,6 +87,11 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func submitButton(_ sender: AnyObject) {
         actionIndicator.startAnimating()
+        guard mediaURLTextField.text != "" else {
+            actionIndicator.stopAnimating()
+            presentError(title: "No Website Entered", errorMessage: "Please enter a valid URL in the Website text field")
+            return
+        }
         setLocation() {(errorMessage) in
             performUpdatesOnMain {
                 if let errorMessage = errorMessage {
