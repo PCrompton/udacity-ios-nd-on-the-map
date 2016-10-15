@@ -21,7 +21,7 @@ class LocationsMapViewController: UIViewController, MKMapViewDelegate, MapTabBar
     func loadStudents() {
         mapView.removeAnnotations(mapView.annotations)
         var annotations = [StudentAnnotation]()
-        let students = ParseClient.StudentInformation.students
+        let students = StudentInformation.students
         
         for student in students {
             let annotation = StudentAnnotation(student: student)
