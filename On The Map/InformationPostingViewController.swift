@@ -39,11 +39,11 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     @IBAction func findOnMapButton(_ sender: AnyObject) {
         actionIndicator.startAnimating()
         mapView.removeAnnotations(mapView.annotations)
-        setLocation() {(error) in
+        setLocation() {(errorMessage) in
             performUpdatesOnMain {
                 self.actionIndicator.stopAnimating()
-                if let error = error {
-                    self.presentError(title: "Error Finding Location", errorMessage: error)
+                if let errorMessage = errorMessage {
+                    self.presentError(title: "Error Finding Location", errorMessage: errorMessage)
                     return
                 }
                 if let coordinate = self.coordinate {
