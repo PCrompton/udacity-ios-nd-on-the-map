@@ -13,17 +13,11 @@ class LocationsTableViewController: UITableViewController, MapTabBarControllerCh
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        loadStudents()
     }
 
     func loadStudents() {
         tableView.reloadData()
-    }
-    
-    func startActivityIndicator() {
-    }
-    
-    func stopActivityIndicator() {
     }
     // MARK: - Table view data source
 

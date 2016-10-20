@@ -9,10 +9,7 @@
 import UIKit
 
 protocol MapTabBarControllerChild {
-    func startActivityIndicator();
-    func stopActivityIndicator();
     func loadStudents();
-    
 }
 
 class MapTabBarController: UITabBarController {
@@ -31,36 +28,21 @@ class MapTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if UdacityClient.LoginSession.currentLoginSession == nil {
-            presentLoginVC()
-        }
-        else {
-            fetchStudentsAndUpdate()
-        }
+        fetchStudentsAndUpdate()
      }
     
     func fetchStudentsAndUpdate() {
-        for child in children {
-            child.startActivityIndicator()
-        }
         ParseClient.StudentInformation.fetchStudents() {(error) in
             performUpdatesOnMain {
                 if let error = error {
                     self.presentError(title: "Failed to Download", errorMessage: error.debugDescription)
-                } else {
-                    self.updateChildren()
+                }
+                else {
+                    for child in self.children {
+                        child.loadStudents()
+                    }
                 }
             }
-        }
-        for child in children {
-            child.stopActivityIndicator()
-        }
-    }
-    
-    func updateChildren() {
-        for child in children {
-            child.loadStudents()
         }
     }
     
@@ -72,7 +54,7 @@ class MapTabBarController: UITabBarController {
     
     @IBAction func logoutButton(_ sender: AnyObject) {
         UdacityClient.LoginSession.currentLoginSession = nil
-        presentLoginVC()
+        dismiss(animated: true, completion: nil)
     }
 
     @IBAction func pinButton(_ sender: AnyObject) {

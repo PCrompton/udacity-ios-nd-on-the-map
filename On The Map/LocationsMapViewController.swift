@@ -16,9 +16,11 @@ class LocationsMapViewController: UIViewController, MKMapViewDelegate, MapTabBar
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadStudents()
     }
     
     func loadStudents() {
+        activityIndicator.startAnimating()
         mapView.removeAnnotations(mapView.annotations)
         var annotations = [StudentAnnotation]()
         let students = ParseClient.StudentInformation.students
@@ -27,16 +29,8 @@ class LocationsMapViewController: UIViewController, MKMapViewDelegate, MapTabBar
             let annotation = StudentAnnotation(student: student)
             annotations.append(annotation)
         }
-        
-        mapView.addAnnotations(annotations)
-    }
-    
-    func startActivityIndicator() {
-        activityIndicator.startAnimating()
-    }
-    
-    func stopActivityIndicator() {
         activityIndicator.stopAnimating()
+        mapView.addAnnotations(annotations)
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {

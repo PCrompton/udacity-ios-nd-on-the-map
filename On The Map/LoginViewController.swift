@@ -47,8 +47,9 @@ class LoginViewController: UIViewController {
                 self.presentError(title: "Error Logging In", errorMessage: errorMessage)
             }
             else {
-                self.mapTabBarController?.fetchStudentsAndUpdate()
-                self.dismiss(animated: true, completion: nil)
+                let navigationController = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
+                
+                self.present(navigationController, animated: true, completion: nil)
             }
             
         }
