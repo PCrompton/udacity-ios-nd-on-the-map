@@ -114,7 +114,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                     let latitude = coordinate.latitude
                     let longitude = coordinate.longitude
                     
-                    StudentInformation.get(by: uniqueKey) { (objectId, errorMessage) in
+                    ParseClient.get(by: uniqueKey) { (objectId, errorMessage) in
                         performUpdatesOnMain {
                             if let errorMessage = errorMessage {
                                 self.presentError(title: "Failed to Post Student Information", errorMessage: errorMessage)
@@ -122,7 +122,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                             }
                             let student = StudentInformation.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
                             
-                            student.post() {(errorMessage) in
+                            ParseClient.post(student: student) {(errorMessage) in
                                 performUpdatesOnMain {
                                     self.actionIndicator.stopAnimating()
                                     

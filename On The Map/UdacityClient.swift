@@ -22,7 +22,7 @@ class UdacityClient: SuperClient {
         let client = UdacityClient.sharedInstance()
         let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.session)", with: nil)
         let httpHeaders = [HTTPHeaderKeys.accept: HTTPHeaderValues.json, HTTPHeaderKeys.contentType: HTTPHeaderValues.json]
-        let request = client.createRequest(for: url, as: HTTPMethod.post, with: httpHeaders, with: HTTPBody(username: username, password: password).body)
+        let request = UdacityClient.createRequest(for: url, as: HTTPMethod.post, with: httpHeaders, with: HTTPBody(username: username, password: password).body)
         
         client.createAndRunTask(for: request) { (result, error) in
             
@@ -71,7 +71,7 @@ class UdacityClient: SuperClient {
                 }
                 
                 let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.users)/\(userId)", with: nil)
-                let request = client.createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
+                let request = UdacityClient.createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
                 client.createAndRunTask(for: request, taskCompletion: { (result, error) in
                     performUpdatesOnMain {
                         guard error == nil else {

@@ -32,7 +32,7 @@ class MapTabBarController: UITabBarController {
      }
     
     func fetchStudentsAndUpdate() {
-        StudentInformation.fetchStudents() {(error) in
+        ParseClient.fetchStudents() {(error) in
             performUpdatesOnMain {
                 if let error = error {
                     self.presentError(title: "Failed to Download", errorMessage: error.debugDescription)

@@ -44,14 +44,14 @@ class SuperClient: NSObject {
                     return
                 }
                 
-                self.convertDataWithCompletionHandler(data: data, completionHandlerForConvertData: taskCompletion)
+                SuperClient.convertDataWithCompletionHandler(data: data, completionHandlerForConvertData: taskCompletion)
             }
         }
 
         task.resume()
     }
     
-    func createRequest(for url: URL, as type: HTTPMethod?, with headers: [String: String]?, with body: String?) -> URLRequest {
+    class func createRequest(for url: URL, as type: HTTPMethod?, with headers: [String: String]?, with body: String?) -> URLRequest {
         var request = URLRequest(url: url)
         if let headers = headers {
             for (key, value) in headers {
@@ -67,13 +67,13 @@ class SuperClient: NSObject {
         return request
     }
     
-    func serializeDataToJson(data: Data) throws -> [String: Any]? {
+    class func serializeDataToJson(data: Data) throws -> [String: Any]? {
         let parsedResult: [String: Any]?
             parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
         return parsedResult
     }
     
-    func convertDataWithCompletionHandler(data: Data, completionHandlerForConvertData: (_ result: [String: Any]?, _ error: NSError?) -> Void) {
+    class func convertDataWithCompletionHandler(data: Data, completionHandlerForConvertData: (_ result: [String: Any]?, _ error: NSError?) -> Void) {
         let parsedResult: [String: Any]?
         do {
             parsedResult = try serializeDataToJson(data: data)
