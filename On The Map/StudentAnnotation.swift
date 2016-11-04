@@ -17,7 +17,23 @@ class StudentAnnotation: MKPointAnnotation {
         let lat = CLLocationDegrees(student.latitude!)
         let long = CLLocationDegrees(student.longitude!)
         self.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-        self.title = "\(student.firstName) \(student.lastName)"
-        self.subtitle = student.mediaURLString
+        let firstName: String
+        if let name = student.firstName {
+            firstName = name
+        } else {
+            firstName = ""
+        }
+        let lastName: String
+        if let name = student.lastName {
+            lastName = name
+        } else {
+            lastName = ""
+        }
+        self.title = "\(firstName) \(lastName)"
+        if let subtitle = student.mediaURLString {
+            self.subtitle = subtitle
+        } else {
+            self.subtitle = ""
+        }
     }
 }

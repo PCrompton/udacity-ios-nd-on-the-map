@@ -29,8 +29,19 @@ class LocationsTableViewController: UITableViewController, MapTabBarControllerCh
         let student = StudentInformation.students[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "StudentInformationCell", for: indexPath)
         
-        
-        cell.textLabel?.text = "\(student.firstName) \(student.lastName)"
+        let firstName: String
+        if let name = student.firstName {
+            firstName = name
+        } else {
+            firstName = ""
+        }
+        let lastName: String
+        if let name = student.lastName {
+            lastName = name
+        } else {
+            lastName = ""
+        }
+        cell.textLabel?.text = "\(firstName) \(lastName)"
         
         if let mediaURLString = student.mediaURLString {
             cell.detailTextLabel?.text = mediaURLString

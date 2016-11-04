@@ -42,16 +42,17 @@ class LoginViewController: UIViewController {
         }
         activityIndicator.startAnimating()
         UdacityClient.login(with: username, password: password) {(errorMessage) in
-            self.activityIndicator.stopAnimating()
-            if let errorMessage = errorMessage {
-                self.presentError(title: "Error Logging In", errorMessage: errorMessage)
+            performUpdatesOnMain {
+                self.activityIndicator.stopAnimating()
+                if let errorMessage = errorMessage {
+                    self.presentError(title: "Error Logging In", errorMessage: errorMessage)
+                }
+                else {
+                    let navigationController = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
+                    
+                    self.present(navigationController, animated: true, completion: nil)
+                }
             }
-            else {
-                let navigationController = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
-                
-                self.present(navigationController, animated: true, completion: nil)
-            }
-            
         }
     }
 

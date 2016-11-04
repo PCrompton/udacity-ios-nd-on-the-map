@@ -16,9 +16,9 @@ public struct StudentInformation {
     public static var students = [StudentInformation]()
     
     let objectId: String?
-    let uniqueKey: String
-    let firstName: String
-    let lastName: String
+    let uniqueKey: String?
+    let firstName: String?
+    let lastName: String?
     let mapString: String?
     let mediaURLString: String?
     let latitude: Double?
@@ -53,11 +53,27 @@ public struct StudentInformation {
     
     // MARK: Init Methods
     init(jsonDict: [String:Any?]) {
-        
-        objectId = jsonDict[StudentKeys.objectId] as! String?
-        uniqueKey = jsonDict[StudentKeys.uniqueKey] as! String
-        firstName = jsonDict[StudentKeys.firstName] as! String
-        lastName = jsonDict[StudentKeys.lastName] as! String
+      
+        if let result = jsonDict[StudentKeys.objectId] as? String {
+            objectId = result
+        } else {
+            objectId = nil
+        }
+        if let result = jsonDict[StudentKeys.uniqueKey] as? String {
+            uniqueKey = result
+        } else {
+            uniqueKey = nil
+        }
+        if let result = jsonDict[StudentKeys.firstName] as? String {
+            firstName = result
+        } else {
+            firstName = nil
+        }
+        if let result = jsonDict[StudentKeys.lastName] as? String {
+            lastName = result
+        } else {
+            lastName = nil
+        }
         if let result = jsonDict[StudentKeys.mapString] as? String {
             mapString = result
         } else {
