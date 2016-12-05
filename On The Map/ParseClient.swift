@@ -85,7 +85,8 @@ class ParseClient: SuperClient {
                         completion(nil, "Unable to get ObjectId")
                     }
                 } else {
-                    completion(nil, "Unable to get Student Information")
+                    completion(nil, nil)
+//                    completion(nil, "Unable to get Student Information")
                 }
                 
             }

@@ -47,7 +47,7 @@ public struct StudentInformation {
     
     var body: String {
         get {
-            return "{\"uniqueKey\": \"\(uniqueKey)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\", \"mapString\": \"\(mapString!)\", \"mediaURL\": \"\(mediaURLString!)\", \"latitude\": \(latitude!), \"longitude\": \(longitude!)}"
+            return "{\"uniqueKey\": \"\(uniqueKey!)\", \"firstName\": \"\(firstName!)\", \"lastName\": \"\(lastName!)\", \"mapString\": \"\(mapString!)\", \"mediaURL\": \"\(mediaURLString!)\", \"latitude\": \(latitude!), \"longitude\": \(longitude!)}"
         }
     }
     
