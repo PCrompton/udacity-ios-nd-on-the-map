@@ -122,7 +122,6 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                                 return
                             }
                             let student = StudentInformation.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
-                            print(student.body)
                             ParseClient.post(student: student) {(errorMessage) in
                                 performUpdatesOnMain {
                                     self.actionIndicator.stopAnimating()
