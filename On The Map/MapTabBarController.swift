@@ -14,6 +14,8 @@ protocol MapTabBarControllerChild {
 
 class MapTabBarController: UITabBarController {
     
+    let parseClient = ParseClient.sharedInstance()
+    
     var children: [MapTabBarControllerChild] {
         get {
             var children = [MapTabBarControllerChild]()
@@ -32,7 +34,7 @@ class MapTabBarController: UITabBarController {
      }
     
     func fetchStudentsAndUpdate() {
-        ParseClient.fetchStudents() {(error) in
+        parseClient.fetchStudents() {(error) in
             performUpdatesOnMain {
                 if let error = error {
                     self.presentError(title: "Failed to Download", errorMessage: error.debugDescription)

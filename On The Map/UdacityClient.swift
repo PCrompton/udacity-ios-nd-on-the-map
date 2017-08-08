@@ -18,14 +18,14 @@ class UdacityClient: SuperClient {
         return Singleton.sharedInstance
     }
     
-    class func login(with username: String, password: String, completion: ((_ errorMessage: String?) -> Void)?) {
+    func login(with username: String, password: String, completion: ((_ errorMessage: String?) -> Void)?) {
         let client = UdacityClient.sharedInstance()
         let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.session)", with: nil)
         let httpHeaders = [HTTPHeaderKeys.accept: HTTPHeaderValues.json, HTTPHeaderKeys.contentType: HTTPHeaderValues.json]
-        let request = UdacityClient.createRequest(for: url, as: HTTPMethod.post, with: httpHeaders, with: HTTPBody(username: username, password: password).body)
-        
-        client.createAndRunTask(for: request) { (result, error) in
-            
+        let request = createRequest(for: url, as: HTTPMethod.post, with: httpHeaders, with: HTTPBody(username: username, password: password).body)
+        print("Body: \(HTTPBody(username: username, password: password).body)")
+        getJson(for: request) { (result, response, error) in
+ 
             guard error == nil else {
                 completion?(error!.localizedDescription)
                 return
@@ -70,8 +70,10 @@ class UdacityClient: SuperClient {
             }
             
             let url = client.getURL(for: Constants.urlComponents, with: "\(Methods.users)/\(userId)", with: nil)
-            let request = UdacityClient.createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
-            client.createAndRunTask(for: request, taskCompletion: { (result, error) in
+            let request = self.createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
+            
+            self.getJson(for: request, with: { (result, response, error) in
+
                 guard error == nil else {
                     completion?(error!.localizedDescription)
                     return

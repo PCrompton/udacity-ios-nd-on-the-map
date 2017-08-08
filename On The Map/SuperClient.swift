@@ -9,7 +9,7 @@
 import Foundation
 
 class SuperClient: NSObject {
-    
+        
     // MARK: Properties
     var session = URLSession.shared
     
@@ -29,29 +29,49 @@ class SuperClient: NSObject {
         return components.url!
     }
     
-    func createAndRunTask(for request: URLRequest, taskCompletion: @escaping (_ result: [String: Any]?, _ error: Error?) -> Void) {
-        
+    // Mark: Functions
+    func createAndRunTask(for request: URLRequest, with completion: @escaping (_ data: Data?, _ response: HTTPURLResponse?, _ error: Error?) -> Void) {
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
-            performUpdatesOnMain {
-                guard (error == nil) else {
-                    taskCompletion(nil, error)
-                    return
-                }
-                
-                guard let data = data else {
-                    taskCompletion(nil, error)
-                    return
-                }
-                
-                SuperClient.convertDataWithCompletionHandler(data: data, completionHandlerForConvertData: taskCompletion)
+            
+            guard let response = response as? HTTPURLResponse else {
+                completion(data, nil, error)
+                return
             }
+            
+            guard (error == nil) else {
+                completion(nil, response, error)
+                return
+            }
+            
+            guard let data = data else {
+                completion(nil, response, error)
+                return
+            }
+            
+            completion(data, response, nil)
+            
         }
-
         task.resume()
     }
     
-    class func createRequest(for url: URL, as type: HTTPMethod?, with headers: [String: String]?, with body: String?) -> URLRequest {
+    func getJson(for request: URLRequest, with completion: @escaping (_ result: [String: Any]?, _ response: HTTPURLResponse?, _ error: Error?) -> Void) {
+        createAndRunTask(for: request) { (data, response, error) in
+            guard (error == nil) else {
+                completion(nil, response, error)
+                return
+            }
+            
+            guard let data = data else {
+                completion(nil, response, error)
+                return
+            }
+            
+            self.convertDataWithCompletionHandler(data: data, response: response, completionHandlerForConvertData: completion)
+        }
+    }
+    
+    func createRequest(for url: URL, as type: HTTPMethod?, with headers: [String: String]?, with body: String?) -> URLRequest {
         var request = URLRequest(url: url)
         if let headers = headers {
             for (key, value) in headers {
@@ -67,28 +87,29 @@ class SuperClient: NSObject {
         return request
     }
     
-    class func serializeDataToJson(data: Data) throws -> [String: Any]? {
+    func serializeDataToJson(data: Data) throws -> [String: Any]? {
         let parsedResult: [String: Any]?
-            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+        parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
         return parsedResult
     }
     
-    class func convertDataWithCompletionHandler(data: Data, completionHandlerForConvertData: (_ result: [String: Any]?, _ error: NSError?) -> Void) {
+    func convertDataWithCompletionHandler(data: Data, response: HTTPURLResponse?, completionHandlerForConvertData: (_ result: [String: Any]?, _ response: HTTPURLResponse?, _ error: NSError?) -> Void) {
         let parsedResult: [String: Any]?
         do {
             parsedResult = try serializeDataToJson(data: data)
-            completionHandlerForConvertData(parsedResult, nil)
+            completionHandlerForConvertData(parsedResult, response, nil)
         } catch {
-            let newData = data.subdata(in: Range(5...data.count))
-            do {
-                parsedResult = try serializeDataToJson(data: newData)
-                completionHandlerForConvertData(parsedResult, nil)
-            } catch {
-                let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-                completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
-            }
-        }
-        
-    }
+            let range = Range(5..<data.count)
+            let newData = data.subdata(in: range)
+            convertDataWithCompletionHandler(data: newData, response: response, completionHandlerForConvertData: { (result, response, error) in
+                if error != nil {
+                    let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
+                    completionHandlerForConvertData(nil, response, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
+                } else {
+                    completionHandlerForConvertData(result, response, error)
+                }
 
+            })
+        }
+    }
 }

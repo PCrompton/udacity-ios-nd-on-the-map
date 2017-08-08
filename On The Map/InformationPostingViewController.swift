@@ -20,6 +20,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var actionIndicator: UIActivityIndicatorView!
     
     var mapTabBarController: MapTabBarController?
+    let parseClient = ParseClient.sharedInstance()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -114,7 +115,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                     let latitude = coordinate.latitude
                     let longitude = coordinate.longitude
                     
-                    ParseClient.get(by: uniqueKey) { (objectId, errorMessage) in
+                    self.parseClient.get(by: uniqueKey) { (objectId, errorMessage) in
                         performUpdatesOnMain {
                             if let errorMessage = errorMessage {
                                 self.actionIndicator.stopAnimating()
@@ -122,7 +123,7 @@ class InformationPostingViewController: UIViewController, MKMapViewDelegate {
                                 return
                             }
                             let student = StudentInformation.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude)
-                            ParseClient.post(student: student) {(errorMessage) in
+                            self.parseClient.post(student: student) {(errorMessage) in
                                 performUpdatesOnMain {
                                     self.actionIndicator.stopAnimating()
                                     

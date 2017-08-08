@@ -17,6 +17,7 @@ class LoginViewController: UIViewController {
     var mapTabBarController: MapTabBarController?
     
     var viewDisplaced = false
+    let udacityClient = UdacityClient.sharedInstance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +42,7 @@ class LoginViewController: UIViewController {
             return
         }
         activityIndicator.startAnimating()
-        UdacityClient.login(with: username, password: password) {(errorMessage) in
+        udacityClient.login(with: username, password: password) {(errorMessage) in
             performUpdatesOnMain {
                 self.activityIndicator.stopAnimating()
                 if let errorMessage = errorMessage {

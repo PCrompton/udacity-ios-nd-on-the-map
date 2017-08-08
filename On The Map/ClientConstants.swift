@@ -9,8 +9,7 @@
 import Foundation
 
 extension SuperClient {
-    
-    // MARK: Client Constants
+    // MARK: HTTPMethods
     enum HTTPMethod: String {
         case get = "GET"
         case post = "POST"

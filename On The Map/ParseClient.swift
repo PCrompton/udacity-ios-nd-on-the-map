@@ -18,7 +18,7 @@ class ParseClient: SuperClient {
         return Singleton.sharedInstance
     }
     
-    class func post(student: StudentInformation, completion: ((_ errorMessage: String?) -> Void)?) {
+    func post(student: StudentInformation, completion: ((_ errorMessage: String?) -> Void)?) {
         let httpMethod: SuperClient.HTTPMethod
         let apiMethod: String
         if let objectId = student.objectId {
@@ -35,10 +35,10 @@ class ParseClient: SuperClient {
             ParseClient.HTTPHeaderKeys.AppId: ParseClient.Constants.AppId,
             SuperClient.HTTPHeaderKeys.contentType: SuperClient.HTTPHeaderValues.json
         ]
-        let request = ParseClient.createRequest(for: url, as: httpMethod, with: headers, with: student.body)
-        StudentInformation.client.createAndRunTask(for: request) { (results, error) in
+        let request = createRequest(for: url, as: httpMethod, with: headers, with: student.body)
+        StudentInformation.client.getJson(for: request) { (result, response, error) in
             performUpdatesOnMain {
-                guard let results = results else {
+                guard let results = result else {
                     completion?("No results returned")
                     return
                 }
@@ -62,19 +62,19 @@ class ParseClient: SuperClient {
         }
     }
     
-    class func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?, _ errorMessage: String?) -> Void)) {
+    func get(by uniqueKey: String, _ completion: @escaping ((_ objectId: String?, _ errorMessage: String?) -> Void)) {
         let method = ParseClient.Methods.StudentLocation
         let parameters = [ParseClient.ParameterKeys.Where: ParseClient.ParameterValues.Where(uniqueKey: uniqueKey)]
         let url = URL(string: StudentInformation.client.getURL(for: ParseClient.Constants.urlComponents, with: method, with: parameters).absoluteString.replacingOccurrences(of: "%22:%22", with: "%22%3A%22"))!
         let httpHeaders = [ParseClient.HTTPHeaderKeys.ApiKey: ParseClient.Constants.ApiKey, ParseClient.HTTPHeaderKeys.AppId: ParseClient.Constants.AppId]
-        let request = ParseClient.createRequest(for: url, as: SuperClient.HTTPMethod.get, with: httpHeaders, with: nil)
-        StudentInformation.client.createAndRunTask(for: request) { (results, error) in
+        let request = createRequest(for: url, as: SuperClient.HTTPMethod.get, with: httpHeaders, with: nil)
+        StudentInformation.client.getJson(for: request) { (result, response, error) in
             performUpdatesOnMain {
                 guard error == nil else {
                     completion(nil, "Error Getting Student Information")
                     return
                 }
-                guard let results = results?["results"] as? [[String: Any]] else {
+                guard let results = result?["results"] as? [[String: Any]] else {
                     completion(nil, "Unable to retrieve results")
                     return
                 }
@@ -93,7 +93,7 @@ class ParseClient: SuperClient {
     }
     
     // MARK: Class Methods
-    public static func fetchStudents(completion: ((_ errorMessage: String?) -> Void)?) {
+    public func fetchStudents(completion: ((_ errorMessage: String?) -> Void)?) {
         StudentInformation.students.removeAll()
         let parameters: [String: Any] = [ParseClient.ParameterKeys.Limit: ParseClient.ParameterValues.Limit, ParseClient.ParameterKeys.Order: ParseClient.ParameterValues.Order]
         let url = ParseClient.sharedInstance().getURL(for: ParseClient.Constants.urlComponents, with: ParseClient.Methods.StudentLocation, with: parameters)
@@ -101,13 +101,13 @@ class ParseClient: SuperClient {
             ParseClient.HTTPHeaderKeys.ApiKey: ParseClient.Constants.ApiKey,
             ParseClient.HTTPHeaderKeys.AppId: ParseClient.Constants.AppId
         ]
-        let request = createRequest(for: url, as: SuperClient.HTTPMethod.get, with: headers, with: nil)
-        ParseClient.sharedInstance().createAndRunTask(for: request) { (results, error) in
+        let request = createRequest(for: url, as: HTTPMethod.get, with: headers, with: nil)
+        ParseClient.sharedInstance().getJson(for: request) { (result, response, error) in
             if let error = error {
                 completion?(error.localizedDescription)
                 return
             }
-            guard let results = results?["results"] as? [[String: Any]] else {
+            guard let results = result?["results"] as? [[String: Any]] else {
                 completion?("No key \"results\" found")
                 return
             }
