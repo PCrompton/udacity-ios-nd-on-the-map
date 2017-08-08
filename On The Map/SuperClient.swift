@@ -94,6 +94,7 @@ class SuperClient: NSObject {
     }
     
     func convertDataWithCompletionHandler(data: Data, response: HTTPURLResponse?, completionHandlerForConvertData: (_ result: [String: Any]?, _ response: HTTPURLResponse?, _ error: NSError?) -> Void) {
+
         let parsedResult: [String: Any]?
         do {
             parsedResult = try serializeDataToJson(data: data)
@@ -108,7 +109,6 @@ class SuperClient: NSObject {
                 } else {
                     completionHandlerForConvertData(result, response, error)
                 }
-
             })
         }
     }
